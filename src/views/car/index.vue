@@ -63,6 +63,12 @@
           添加车辆信息
         </el-button>
       </el-form>
+      <el-tabs v-model="listQuery.status" @tab-click="handleClick">
+        <el-tab-pane label="全部车辆" name="0"></el-tab-pane>
+        <el-tab-pane label="出售中" name="1"></el-tab-pane>
+        <el-tab-pane label="已出售" name="2"></el-tab-pane>
+        <el-tab-pane label="仓库中" name="3"></el-tab-pane>
+      </el-tabs>
     </div>
 
 

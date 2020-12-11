@@ -86,9 +86,9 @@
   } from '@/api/article'
 
   const statusShow = {
-    1: '常见问题',
-    2: '新闻资讯',
-    3: '帮助中心'
+    1: '行业新闻',
+    2: '时事新闻',
+    3: '常见问题'
   }
   const defaultArticle = {
 
