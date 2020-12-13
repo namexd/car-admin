@@ -3,21 +3,22 @@
     <div class="filter-container">
       <el-form :model="listQuery" ref="filterForm">
         <el-row>
-          <el-col :span="6">
-          <el-form-item label-width="60px" label="手机号" class="postInfo-container-item">
-            <el-input v-model="listQuery.mobile" clearable placeholder="请输入手机号" style="width: 50%" class="filter-item"
-                      @keyup.enter.native="handleFilter"/>
-          </el-form-item>
+          <el-col :span="3">
+            <el-form-item label="" class="postInfo-container-item" style="text-align: right" prop="search_type">
+              <el-select v-model="listQuery.search_type" placeholder="请选择" clearable class="filter-item">
+                <el-option key="user_name" label="姓名" value="user_name"/>
+                <el-option key="mobile" label="手机号" value="mobile"/>
+              </el-select>
+            </el-form-item>
           </el-col>
-          <el-col :span="6">
-          <el-form-item label-width="60px" label="姓名" class="postInfo-container-item">
-            <el-input v-model="listQuery.user_name" clearable placeholder="请输入姓名" style="width: 50%" class="filter-item"
-                      @keyup.enter.native="handleFilter"/>
-          </el-form-item>
+          <el-col :span="3">
+            <el-form-item class="postInfo-container-item" prop="search_keyword">
+              <el-input v-model="listQuery.search_keyword" autocomplete="off" placeholder="请输入关键字"></el-input>
+            </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="6" :offset="2">
           <el-form-item label-width="60px" label="推荐人:" class="postInfo-container-item">
-            <el-input v-model="listQuery.p_user" clearable placeholder="请输入姓名" style="width: 50%" class="filter-item"
+            <el-input v-model="listQuery.referees" clearable placeholder="推荐人手机号" style="width: 50%" class="filter-item"
                       @keyup.enter.native="handleFilter"/>
           </el-form-item>
           </el-col>
@@ -84,10 +85,10 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="300px">
         <template slot-scope="{row,$index}">
-          <el-button type="warning" size="mini" @click="handleView(row)">
+          <el-button type="warning" size="mini" @click="handleMoneyOrder(row)">
             我的投资
           </el-button>
-          <el-button type="danger" size="mini" @click="handleView(row)">
+          <el-button type="danger" size="mini" @click="handleMoneyLog(row)">
             资金管理
           </el-button>
           <el-button type="primary" size="mini" @click="handleView(row)">
@@ -148,9 +149,6 @@
         listQuery: {
           page: 1,
           per_page: 20,
-          mobile: '',
-          user_name: '',
-          p_user: '',
         },
         userStatusOptions,
       }
@@ -216,6 +214,22 @@
             name:'usersDetail',
             query: {
               id:row.id
+            }
+          })
+      },
+      handleMoneyOrder(row) {
+          this.$router.push({
+            name:'MoneyOrder',
+            query: {
+              user_id:row.id
+            }
+          })
+      },
+      handleMoneyLog(row) {
+          this.$router.push({
+            name:'MoneyLog',
+            query: {
+              user_id:row.id
             }
           })
       },

@@ -169,7 +169,8 @@
         listQuery: {
           page: 1,
           per_page:20,
-          product_id:this.$route.query.product_id?this.$route.query.product_id:''
+          product_id:this.$route.query.product_id?this.$route.query.product_id:'',
+          user_id:this.$route.query.user_id?this.$route.query.user_id:''
         }
       }
     },

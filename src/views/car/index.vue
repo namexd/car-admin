@@ -188,7 +188,7 @@
               <el-input type="textarea" v-model="carInfo.subtitle"></el-input>
             </el-form-item>
             <el-form-item label="轮播图" required>
-              <Upload v-show="dialogVisible" v-model="carInfo.banner_ids" :pic_url="carInfo.banners"/>
+              <Upload v-if="dialogVisible==true" v-model="carInfo.banner_ids" :pic_url="carInfo.banners"/>
               <p>建议图片宽度750，高度200-950</p>
             </el-form-item>
 
@@ -269,7 +269,7 @@
                 <el-checkbox v-model="carTest.out_test" :true-label="1" :false-label="2">已检测</el-checkbox>
               </el-form-item>
               <el-form-item label="内部检测" style="margin-top: 30px;" required>
-                <el-checkbox v-model="carTest.config_test" :true-label="1" :false-label="2">已检测</el-checkbox>
+                <el-checkbox v-model="carTest.in_test" :true-label="1" :false-label="2">已检测</el-checkbox>
               </el-form-item>
               <el-form-item label="配置检测" style="margin-top: 30px;" required>
                 <el-checkbox v-model="carTest.config_test" :true-label="1" :false-label="2">已检测</el-checkbox>
@@ -297,7 +297,7 @@
               </el-form-item>
             </el-form>
             <el-button type="default" @click="goNext('carTest')">上一步</el-button>
-            <el-button type="primary" @click="confirmCarUser">保存</el-button>
+            <el-button type="primary" @click="confirmCarUser">保存并关闭</el-button>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -353,7 +353,9 @@
     data() {
       return {
         carId: '',
-        carInfo: {},
+        carInfo: {
+          banners:[]
+        },
         carTest: {},
         carUser: {},
         activeTableName: 'carInfo',
@@ -425,19 +427,10 @@
         this.total = res.data._meta.total_count
         this.listLoading = false
       },
-      async getCarTest() {
-        const res = await getCarTest({ car_id: this.carId })
-        this.carTest = res.data
-      },
-      async getCarUser() {
-        const res = await getCarUser({ car_id: this.carId })
-        this.carUser = res.data
-      },
-
       handleAddCar() {
-        this.carInfo = Object.assign({}, defaultCar)
-        this.carTest = Object.assign({}, defaultCar)
-        this.carUser = Object.assign({}, defaultCar)
+        this.carInfo = {}
+        this.carTest = {}
+        this.carUser ={}
         this.dialogType = 'new'
         this.dialogVisible = true
       },
@@ -453,10 +446,11 @@
       },
       handleEdit(scope) {
         showCar(scope.row.id).then(res => {
-          this.carInfo = res.data
-          this.carId = res.data.id
-          this.getCarTest()
-          this.getCarUser()
+          this.carInfo = res.data.car
+          this.carId = res.data.car.id
+          this.carInfo.banners=res.data.banner
+          this.carTest=res.data.test
+          this.carUser=res.data.user
           this.dialogType = 'edit'
           this.dialogVisible = true
         })
@@ -481,27 +475,37 @@
       },
       async confirmCarInfo() {
         const isEdit = this.dialogType === 'edit'
+        const params = {
+          brand_title: this.carInfo.brand_title,
+          vehicle_title: this.carInfo.vehicle_title,
+          year_title: this.carInfo.year_title,
+          model_id: this.carInfo.model_id,
+          subtitle: this.carInfo.subtitle,
+          banner_ids: this.carInfo.banner_ids,
+          price: this.carInfo.price,
+          new_price: this.carInfo.new_price,
+          mileage: this.carInfo.mileage,
+          registration_at: this.carInfo.registration_at,
+          transmission: this.carInfo.transmission,
+          emission_standard: this.carInfo.emission_standard,
+          number_change: this.carInfo.number_change,
+          is_up: this.carInfo.is_up,
+          accident_test:this.carTest.accident_test,
+          engine_test:this.carTest.engine_test,
+          chassis_test:this.carTest.chassis_test,
+          out_test:this.carTest.out_test,
+          in_test:this.carTest.in_test,
+          config_test:this.carTest.config_test,
+          conclusion:this.carTest.conclusion,
+          owner_user:this.carUser.owner_user,
+          owner_mobile:this.carUser.owner_mobile,
+          owner_idcard:this.carUser.owner_idcard,
+        }
         if (isEdit) {
           this.carId = this.carInfo.id
-          const params = {
-            brand_title: this.carInfo.brand_title,
-            vehicle_title: this.carInfo.vehicle_title,
-            year_title: this.carInfo.year_title,
-            model_id: this.carInfo.model_id,
-            subtitle: this.carInfo.subtitle,
-            banner_ids: this.carInfo.banner_ids,
-            price: this.carInfo.price,
-            new_price: this.carInfo.new_price,
-            mileage: this.carInfo.mileage,
-            registration_at: this.carInfo.registration_at,
-            transmission: this.carInfo.transmission,
-            emission_standard: this.carInfo.emission_standard,
-            number_change: this.carInfo.number_change,
-            is_up: this.carInfo.is_up
-          }
           await updateCar(this.carId, params)
         } else {
-          const res = await addCar(this.carInfo)
+          const res = await addCar(params)
           this.carId = res.data.id
         }
         this.getCar()
@@ -524,6 +528,7 @@
             this.$message.success('保存成功！')
           }
         })
+        this.dialogVisible=false
       },
 
       handleClose() {

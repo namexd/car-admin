@@ -170,7 +170,8 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          per_page: 20
+          per_page: 20,
+          user_id:this.$route.query.user_id?this.$route.query.user_id:''
         }
       }
     },

@@ -1,5 +1,9 @@
 <template>
   <div class="app-container">
+    <div style="margin-bottom: 10px">
+      <el-page-header @back="goBack()" content="跟进记录">
+      </el-page-header>
+    </div>
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="基本参数" name="1">
         <el-form ref="form" label-width="200px" style="max-width: 500px;margin-top: 40px;">
@@ -326,6 +330,9 @@
       this.getData();
     },
     methods: {
+      goBack(){
+        this.$router.back()
+      },
       onSubmit(dataKey, formKey) {
         this.formData[formKey] = JSON.stringify(this[dataKey]);
         updateCarModel(this.opId, this.formData).then((res) => {

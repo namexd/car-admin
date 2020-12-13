@@ -24,7 +24,7 @@
     },
     computed: {
       imageUrl() {
-        return this.GLOBAL.BASE_URL+this.pic_url
+        return this.pic_url
       }
     },
     data() {
@@ -44,7 +44,7 @@
         param.append('file',file.file);//通过append向form对象添加数据
         uploadFile(param).then(response => {
           this.emitInput(response.data.file_url)
-          this.imageUrl = this.GLOBAL.BASE_URL+response.data.file_url;
+          this.imageUrl = response.data.file_url;
           // this.uploadImage(response.data,file.file)
         })
 

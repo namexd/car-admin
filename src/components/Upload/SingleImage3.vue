@@ -6,9 +6,11 @@
       list-type="picture-card"
       :on-preview="handlePictureCardPreview"
       :file-list="imgList"
-       :on-change="handleChange"
+      :on-change="handleChange"
       :limit="10"
-      :on-remove="handleRemove">
+      :before-remove="beforeRemove"
+      :on-remove="handleRemove"
+    >
       <i class="el-icon-plus"></i>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
@@ -18,19 +20,20 @@
 </template>
 
 <script>
-  import {  uploadFile } from '../../api/upload'
+  import { uploadFile } from '../../api/upload'
+
   export default {
     props: {
       value: '',
-      pic_url:null
+      pic_url: []
     },
     mounted() {
-       this.imageUrl()
+      this.imageUrl()
     },
     data() {
       return {
         imgList: [],
-        idList: [],
+        imgList2: [],
         valueList: [],
         dialogImageUrl: '',
         dialogVisible: false
@@ -38,17 +41,24 @@
     },
     methods: {
       imageUrl() {
-        this.pic_url.forEach((i)=>{
-          this.imgList.push({ url:this.GLOBAL.BASE_URL+i.banner_url})
-          this.idList.push({id:i.id,url:this.GLOBAL.BASE_URL+i.banner_url})
-        })
-        this.valueList=this.value
+        if (this.pic_url) {
+          this.pic_url.forEach((i) => {
+            this.imgList.push({ id: i.id, name: i.name, url: i.banner_url })
+          })
+          this.valueList = this.value.indexOf(',') ? this.value.split(','):this.valueList.push(this.value);
+        } else {
+          return true
+        }
+
       },
       upload(file) {
-        let param = new FormData(); //创建form对象
-        param.append('file',file.file);//通过append向form对象添加数据
+        console.log(file)
+        let param = new FormData() //创建form对象
+        param.append('file', file.file)//通过append向form对象添加数据
         uploadFile(param).then(response => {
           this.valueList.push(response.data.file_id)
+          // this.imgList.push({name: response.data.file_name, url: response.data.file_url })
+          this.imgList2.push({ id: response.data.file_id, name: response.data.file_name, url: response.data.file_url })
           this.emitInput(this.valueList)
         })
 
@@ -57,28 +67,30 @@
         console.log(val.join(','))
         this.$emit('input', val.join(','))
       },
-      handleChange(file)
-      {
-        console.log(2323,file)
-        const image = { name: file.name, url:file.url }
+      handleChange(file, fileList) {
+        const image = { name: file.name, url: file.url }
         this.imgList.push(image)
       },
       handleRemove(file, fileList) {
-        const url=[];
-        fileList.forEach((item)=>{
-          this.idList.forEach((i)=>{
-           if (i.url==item.url)
-           {
-             url.push(i.id)
-           }
+        console.log(fileList)
+        const url = []
+        this.imgList = fileList
+        fileList.forEach((item) => {
+          this.imgList2.forEach((i) => {
+            if (item.name == i.name) {
+              url.push(i.id)
+            }
           })
         })
-        this.valueList=url
         this.emitInput(url)
+        this.valueList = url
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url
         this.dialogVisible = true
+      },
+      beforeRemove(file) {
+        return this.$confirm(`确定移除 ${file.name}？`)
       }
     }
   }

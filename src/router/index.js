@@ -163,7 +163,7 @@ export const constantRoutes = [
         path: 'category',
         name: 'CarCategory',
         component: () => import('@/views/car/category'),
-        meta: { title: '品牌分类', icon: 'tree' }
+        meta: { title: '品牌分类', icon: 'tree' ,keepAlive: true}
       },
       {
         path: 'editInfo',

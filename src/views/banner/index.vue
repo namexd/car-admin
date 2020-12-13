@@ -48,7 +48,7 @@
         <el-form-item label="名称" required>
           <el-input v-model="banner.title" placeholder="轮播图名称"/>
         </el-form-item>
-        <el-form-item label="轮播图地址" required>
+        <el-form-item label="轮播图地址">
           <el-input v-model="banner.link_url" placeholder="轮播图地址"/>
         </el-form-item>
         <el-form-item label="上传图片" required>

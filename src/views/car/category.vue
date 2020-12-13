@@ -11,7 +11,7 @@
             </el-button>
             <el-button v-if="data.formKey != 'year_id'" type="text" size="mini" style="margin-left: 20px;color: red;"
               @click="editDialogShow(node, data)">
-              编辑
+              {{node.level === 4?'编辑参数':'编辑'}}
             </el-button>
             <el-button type="text" size="mini" style="margin-left: 20px;color: red;" @click="deleteHandle(node, data.id)">
               删除
@@ -30,7 +30,6 @@
           <el-upload class="avatar-uploader" :show-file-list="false" action="Fake Action" :http-request="httpRequest">
             <img v-if="imageUrl" :src="imageUrl" class="avatar line">
             <i v-else class="el-icon-plus avatar-uploader-icon line"></i>
-            <div style="color: #666;">只支持.jpg格式</div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -190,7 +189,7 @@
             this.form["icon_id"] = data.icon_id;
           }
           if (data.icon_url) {
-            this.imageUrl = this.GLOBAL.BASE_URL + data.icon_url;
+            this.imageUrl =data.icon_url;
           }
           if (data.formKey) {
             this.form[data.formKey] = data.id;
@@ -201,21 +200,11 @@
       },
       // 上传品牌logo
       httpRequest(file) {
-        const isJPG = file.file.type === 'image/jpeg';
-        const isLt2M = file.file.size / 1024 / 1024 < 2;
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-          return false;
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-          return false;
-        }
         let formData = new FormData();
         formData.append("file", file.file);
         uploadFile(formData).then((res) => {
           this.form["icon_id"] = res.data.file_id;
-          this.imageUrl = this.GLOBAL.BASE_URL + res.data.file_url;
+          this.imageUrl =res.data.file_url;
         });
       },
       // 保存品牌
@@ -254,7 +243,10 @@
             this.form = {
               title: ""
             };
-            this.imageUrl = "";
+            this.$message({
+              type: 'success',
+              message: '编辑品牌成功!'
+            });
             this.dialog_Brand = false;
           });
         }
@@ -299,6 +291,10 @@
             };
             this.dialog_Series = false;
             // this.$refs.tree.store.nodesMap[this.opId].expanded = true;
+            this.$message({
+              type: 'success',
+              message: '编辑车系成功!'
+            });
           });
         }
       },
@@ -360,6 +356,10 @@
             message: '新增型号成功!'
           });
           // this.$refs.tree.store.nodesMap[this.opId].expanded = true;
+          this.$message({
+            type: 'success',
+            message: '编辑年款成功!'
+          });
         });
       },
       // 懒加载节点展开时
