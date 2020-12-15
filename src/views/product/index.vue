@@ -192,6 +192,10 @@
               </el-row>
 
             </el-form-item>
+            <el-form-item label="是否显示" style="margin-bottom: 30px;" required>
+                  <el-radio v-model="productInfo.is_show" :label="1">是</el-radio>
+                  <el-radio v-model="productInfo.is_show" :label="2">否</el-radio>
+            </el-form-item>
             <div style="text-align:right;">
               <el-button type="default" @click="goNext('productContent')">下一步</el-button>
             </div>
