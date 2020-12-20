@@ -1,5 +1,5 @@
 <script>
- const BASE_URL = 'http://carapi.fedax.cn';
+ const BASE_URL = 'http://api.taoyouauto.com';
     export default{
         BASE_URL
     }

@@ -39,7 +39,7 @@ module.exports = {
     proxy: {
       //配置跨域
       '/admin': {
-        target: 'http://carapi.fedax.cn/',   
+        target: 'http://api.taoyouauto.com/',   
         ws: true,      //是否跨域
         changOrigin: true,
         pathRewrite: {
