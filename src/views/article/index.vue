@@ -60,7 +60,7 @@
           <el-input type="textarea" v-model="article.article_content" placeholder="简介"/>
         </el-form-item>
         <el-form-item label="内容" required>
-          <el-input type="textarea" v-model="article.introduce" placeholder="内容"/>
+          <Tinymce v-if="dialogVisible" v-model="article.introduce" :height="400" width="80%"></Tinymce>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -74,6 +74,7 @@
 <script>
   import Upload from '@/components/Upload/SingleImage'
   import waves from '@/directive/waves' // waves directive
+  import Tinymce from '@/components/Tinymce'
 
   import Pagination from '@/components/Pagination'
 

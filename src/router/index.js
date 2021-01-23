@@ -109,6 +109,12 @@ export const constantRoutes = [
         name: 'MoneyReturn',
         component: () => import('@/views/money/return'),
         meta: { title: '回款列表', icon: '回款列表' }
+      },
+      {
+        path: 'withdraw',
+        name: 'MoneyWithdraw',
+        component: () => import('@/views/money/withdraw'),
+        meta: { title: '提现列表', icon: '提现 (1)' }
       }
     ]
   },
@@ -131,6 +137,27 @@ export const constantRoutes = [
         component: () => import('@/views/article/index'),
         meta: { title: '文章管理', icon: '文章管理' }
       }
+    ]
+  },{
+    path: '/sys-config',
+    component: Layout,
+    redirect: '/sys-config/index',
+    name: 'Resource',
+    meta: { title: '系统管理', icon: '系统管理' },
+    children: [
+      {
+        path: 'base',
+        name: 'SysBase',
+        component: () => import('@/views/sys/base'),
+        meta: { title: '基础设置', icon: '基础设置' }
+      },
+      {
+        path: 'plat',
+        name: 'SysPlat',
+        component: () => import('@/views/sys/plat'),
+        meta: { title: '平台介绍', icon: '平台介绍' }
+      },
+
     ]
   },
   {

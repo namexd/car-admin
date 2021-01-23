@@ -13,8 +13,8 @@
           <el-col :span="3">
             <el-form-item label="" class="postInfo-container-item" style="text-align: right" prop="search_type">
               <el-select v-model="listQuery.search_type" placeholder="请选择" clearable class="filter-item">
-                <el-option key="user_name" label="姓名" value="user_name"/>
-                <el-option key="mobile" label="手机号" value="mobile"/>
+                <el-option key="user_name" label="姓名" value="1"/>
+                <el-option key="mobile" label="手机号" value="2"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -55,11 +55,6 @@
 
     <el-table ref="dragTable" v-loading="listLoading" :data="moneyList" row-key="id" fit highlight-current-row
               style="width: 100%;margin-top:30px;">
-      <el-table-column align="center" label="流水号">
-        <template slot-scope="scope">
-          {{ scope.row.order_no }}
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="姓名">
         <template slot-scope="scope">
           {{ scope.row.user_name }}
@@ -70,38 +65,29 @@
           {{ scope.row.user_mobile}}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="变动金额 (元)">
+      <el-table-column align="center" label="银行名称">
+        <template slot-scope="scope">
+          {{ scope.row.bank_name}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="银行卡号">
+        <template slot-scope="scope">
+          {{ scope.row.bank_card_no}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="提现金额">
         <template slot-scope="scope">
           {{ scope.row.money}}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="待收收益(元)">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          {{ scope.row.payoff}}
+          <el-button  @click="agree(scope.row)">已转账</el-button>
+          <el-button  @click="agree(scope.row)">拒绝</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="参与项目">
-        <template slot-scope="scope">
-          {{ scope.row.create_at}}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="项目开始时间">
-        <template slot-scope="scope">
-          {{ scope.row.create_at}}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="还本时间">
-        <template slot-scope="scope">
-          {{ scope.row.create_at}}
-        </template>
-      </el-table-column>
-<!--      <el-table-column align="center" label="操作">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-button v-if="compareDate(scope.row.create_at)" @click="agree(scope.row)">同意</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.per_page" @pagination="getMoneyReturn"/>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.per_page" @pagination="getMoneyWithdraw"/>
 
   </div>
 </template>
@@ -112,13 +98,13 @@
 
   import Pagination from '@/components/Pagination'
 
-  import { getMoneyLogs, getMoneyOrders, getMoneyReturns, putMoneyReturn } from '../../api/money'
+  import {getMoneyWithdraw, changeMoneyWithdraw } from '../../api/money'
 
   const statusShow = {
-    1: '今日回款',
-    2: '全部',
-    3: '已回款',
-    4: '即将到期',
+    '0': '审核中',
+    '-1': '全部',
+    '1': '提现成功',
+    '2': '无效',
   }
   const defaultCar = {}
   export default {
@@ -176,29 +162,21 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          status:'1',
+          status:'0',
           per_page:20,
         }
       }
     },
     created() {
-      this.getMoneyReturn()
-      var mydate = new Date();
-      console.log(mydate.toLocaleDateString())
+      this.getMoneyWithdraw()
     },
     methods: {
-      compareDate(date)
-      {
-        const mydate = new Date();
-        const nowDate=mydate.toLocaleDateString()
-        const newData=date.replace("-", "/")
-        return nowDate>newData
-      },
       async agree(row) {
-        const res = await putMoneyReturn(row.id)
+        const res = await changeMoneyWithdraw(row.id)
         if(res.code==0)
         {
           this.$message.success('操作成功!')
+          this.getMoneyWithdraw()
         }
       },
       daterangeHandle(value) {
@@ -216,11 +194,11 @@
       },
       handleFilter() {
         this.listQuery.page = 1
-        this.getMoneyReturn()
+        this.getMoneyWithdraw()
       },
-      async getMoneyReturn() {
+      async getMoneyWithdraw() {
         this.listLoading = true
-        const res = await getMoneyReturns(this.listQuery)
+        const res = await getMoneyWithdraw(this.listQuery)
         this.moneyList = res.data.items
         this.total = res.data._meta.total_count
         this.listLoading = false

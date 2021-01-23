@@ -27,3 +27,17 @@ export function getMoneyLogs(params) {
     params
   })
 }
+export function getMoneyWithdraw(params) {
+  return request({
+    url: '/admin/money-manage/withdraw',
+    method: 'get',
+    params
+  })
+}
+export function changeMoneyWithdraw(id,data) {
+  return request({
+    url: '/admin/money-manage/withdraw/'+id,
+    method: 'put',
+    data
+  })
+}
