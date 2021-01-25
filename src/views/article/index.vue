@@ -95,7 +95,7 @@
 
   }
   export default {
-    components: { Pagination, Upload },
+    components: { Pagination, Upload,Tinymce },
     directives: { waves },
 
     filters: {
