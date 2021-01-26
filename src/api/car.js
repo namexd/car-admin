@@ -209,6 +209,13 @@ export function updateCarCopy(id) {
 
   })
 }
+export function sortCars(id,data) {
+  return request({
+    url: `/admin/car/${id}/sort`,
+    method: 'put',
+    data
+  })
+}
 
 export function addCarSellLog(data) {
   return request({

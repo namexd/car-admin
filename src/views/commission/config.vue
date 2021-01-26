@@ -21,22 +21,22 @@
         <el-input v-model="data.withdraw_fee" style="width: 50%"></el-input> %
       </el-form-item>
     </el-card>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>提现方式</span>
-      </div>
-      <el-form-item>
-        <el-checkbox v-model="checked">提现到银行卡</el-checkbox>
-      </el-form-item>
-      <el-form-item label="支持银行" label-width="200px">
-        <div v-for="(item,key) in data.bank">
-          <el-input v-model="data.bank[key]"  placeholder="请输入" style="width: 20%"></el-input> <el-button type="text" @click="deleteBank(key)">删除</el-button>
-        </div>
-        <div>
-          <el-button type="defult" @click="addBank">添加</el-button>
-        </div>
-      </el-form-item>
-    </el-card>
+<!--    <el-card class="box-card">-->
+<!--      <div slot="header" class="clearfix">-->
+<!--        <span>提现方式</span>-->
+<!--      </div>-->
+<!--      <el-form-item>-->
+<!--        <el-checkbox v-model="checked">提现到银行卡</el-checkbox>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="支持银行" label-width="200px">-->
+<!--        <div v-for="(item,key) in data.bank">-->
+<!--          <el-input v-model="data.bank[key]"  placeholder="请输入" style="width: 20%"></el-input> <el-button type="text" @click="deleteBank(key)">删除</el-button>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <el-button type="defult" @click="addBank">添加</el-button>-->
+<!--        </div>-->
+<!--      </el-form-item>-->
+<!--    </el-card>-->
   </el-form>
     <div style="text-align:center;">
       <el-button type="primary" @click="confirmConfig">保存</el-button>

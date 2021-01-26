@@ -74,11 +74,42 @@
 
     <el-table ref="dragTable" v-loading="listLoading" :data="carList" row-key="id" fit highlight-current-row
     >
-      <el-table-column align="center" label="权重">
-        <template slot-scope="scope">
-          {{ scope.row.sort }}
+      <el-table-column min-width="300px" label="权重" width="200">
+        <template slot-scope="{row}">
+          <template v-if="row.edit">
+            <el-input v-model="row.sort" class="edit-input" size="small"/>
+            <el-button
+              class="cancel-btn"
+              size="small"
+              icon="el-icon-refresh"
+              type="text"
+              @click="cancelEdit(row)"
+            >
+              取消
+            </el-button>
+          </template>
+          <span v-else>{{ row.sort }}</span>
+          <el-button
+            v-if="row.edit"
+            type="text"
+            size="small"
+            icon="el-icon-circle-check-outline"
+            @click="confirmEdit(row)"
+          >
+            确定
+          </el-button>
+          <el-button
+            v-else
+            type="text"
+            size="small"
+            icon="el-icon-edit"
+            @click="row.edit=!row.edit"
+          >
+            修改
+          </el-button>
         </template>
       </el-table-column>
+
       <el-table-column align="center" label="品牌">
         <template slot-scope="scope">
           {{ scope.row.brand_title }}
@@ -325,7 +356,7 @@
     getCarTest,
     getCarUser,
     getCarVehicles,
-    getCarYears, updateCarCopy, updateCarSell,
+    getCarYears, sortCars, updateCarCopy, updateCarSell,
     updateCarTest, updateCarUser
   } from '../../api/car'
 
@@ -380,6 +411,24 @@
       this.getBrands()
     },
     methods: {
+      cancelEdit(row) {
+        row.sort = row.originalSort
+        row.edit = false
+        this.$message({
+          message: '取消修改权重',
+          type: 'warning'
+        })
+      },
+      confirmEdit(row) {
+        sortCars(row.id, { sort: row.sort }).then(res => {
+          row.edit = false
+          row.originalSort = row.sort
+          this.$message({
+            message: '权重已修改',
+            type: 'success'
+          })
+        })
+      },
       handleClick(name) {
         this.getCar()
       },
@@ -423,9 +472,14 @@
       async getCar() {
         this.listLoading = true
         const res = await getCars(this.listQuery)
-        this.carList = res.data.items
+        const items= res.data.items
         this.total = res.data._meta.total_count
         this.listLoading = false
+        this.carList =  items.map(v => {
+          this.$set(v, 'edit', false)
+          v.originalSort = v.sort
+          return v
+        })
       },
       handleAddCar() {
         this.carInfo = {}

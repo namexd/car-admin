@@ -68,6 +68,11 @@
         {{ scope.row.brand_title}}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="车系"  >
+        <template slot-scope="scope">
+        {{ scope.row.vehicle_title}}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="上牌时间"  >
         <template slot-scope="scope">
         {{ scope.row.registration_at}}
