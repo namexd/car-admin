@@ -14,6 +14,12 @@ export function updateArticle(id,data) {
     data
   })
 }
+export function articleShow(id) {
+  return request({
+    url: `/admin/article/${id}/show`,
+    method: 'put',
+  })
+}
 export function addArticle(data) {
   return request({
     url: '/admin/article',

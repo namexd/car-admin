@@ -14,6 +14,12 @@ export function updateProduct(id,data) {
     data
   })
 }
+export function productShow(id) {
+  return request({
+    url: `/admin/product/${id}/show`,
+    method: 'put',
+  })
+}
 export function addProduct(data) {
   return request({
     url: '/admin/product',

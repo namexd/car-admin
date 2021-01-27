@@ -43,7 +43,7 @@
       imageUrl() {
         if (this.pic_url) {
           this.pic_url.forEach((i) => {
-            this.imgList.push({ id: i.id, name: i.name, url: i.banner_url })
+            this.imgList.push({ id: i.id, name: i.banner_name, url: i.banner_url })
           })
           this.valueList = this.value.indexOf(',') ? this.value.split(','):this.valueList.push(this.value);
         } else {

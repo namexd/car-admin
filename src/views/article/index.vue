@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column align="center" label="是否显示">
         <template slot-scope="scope">
-            {{scope.row.is_show=='1'?'是':'否'}}
+           <el-button size="mini" :type="scope.row.is_show=='1'?'success':'danger'" @click="handleShow(scope.row.id)">{{scope.row.is_show=='1'?'是':'否'}}</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" label="添加时间"  >
@@ -57,10 +57,10 @@
           <p>建议图片宽度750，高度200-950</p>
         </el-form-item>
         <el-form-item label="简介" required>
-          <el-input type="textarea" v-model="article.article_content" placeholder="简介"/>
+          <el-input type="textarea" v-model="article.introduce" placeholder="简介"/>
         </el-form-item>
         <el-form-item label="内容" required>
-          <Tinymce v-if="dialogVisible" v-model="article.introduce" :height="400" width="80%"></Tinymce>
+          <Tinymce v-if="dialogVisible" v-model="article.article_content" :height="400" width="80%"></Tinymce>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -85,6 +85,7 @@
     deleteArticle,
     showArticle,
   } from '@/api/article'
+  import { articleShow } from '../../api/article'
 
   const statusShow = {
     1: '行业新闻',
@@ -141,6 +142,11 @@
         this.article = Object.assign({}, defaultArticle)
         this.dialogType = 'new'
         this.dialogVisible = true
+      },
+      handleShow(id){
+        articleShow(id).then(res=>{
+          this.getArticle()
+        })
       },
       handleEdit(scope) {
         showArticle(scope.row.id).then(res=>{

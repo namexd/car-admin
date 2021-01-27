@@ -102,6 +102,13 @@ export function getCarModels(params) {
 }
 export function updateCarModel(id,data) {
   return request({
+    url: `/admin/car-model/${id}/extra`,
+    method: 'put',
+    data
+  })
+}
+export function updateCarModelName(id,data) {
+  return request({
     url: `/admin/car-model/${id}`,
     method: 'put',
     data

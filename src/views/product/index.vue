@@ -83,15 +83,16 @@
       </el-table-column>
       <el-table-column align="center" label="是否显示">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.is_show | statusFilter">
+          <el-button :type="scope.row.is_show | statusFilter" @click="handleShow(scope.row.id)" size="mini">
             {{scope.row.is_show==1?'是':'否'}}
-          </el-tag>
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="180px">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleEdit(scope)">编辑</el-button>
           <el-button type="default" size="mini" @click="handleLog(scope)">购买记录</el-button>
+          <el-button v-if="scope.row.status==6" type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -115,7 +116,7 @@
               <p>建议图片宽度750，高度200-950</p>
             </el-form-item>
             <el-form-item label="标的金额">
-              <el-input v-model="productInfo.collect_money"></el-input>
+              <el-input v-model="productInfo.collect_money" :disabled="dialogType==='edit'?true:false"></el-input>
             </el-form-item>
             <el-form-item label="年华收益" required>
               <el-row :gutter="20">
@@ -130,14 +131,16 @@
               <el-date-picker type="date"
                               placeholder="选择日期"
                               value-format="yyyy-MM-dd"
-                              v-model="productInfo.raise_start_at">
+                              v-model="productInfo.raise_start_at"
+                              :disabled="dialogType==='edit'?true:false"
+              >
               </el-date-picker>
             </el-form-item>
             <el-form-item label="筹标期限">
 
               <el-row :gutter="20">
                 <el-col :span="6">
-                  <el-input v-model="productInfo.raise_days"></el-input>
+                  <el-input v-model="productInfo.raise_days" :disabled="dialogType==='edit'?true:false"></el-input>
                 </el-col>
                 <el-col :span="6">天</el-col>
               </el-row>
@@ -146,14 +149,14 @@
             <el-form-item label="标的天数">
               <el-row :gutter="20">
                 <el-col :span="6">
-                  <el-input v-model="productInfo.product_days"></el-input>
+                  <el-input v-model="productInfo.product_days" :disabled="dialogType==='edit'?true:false"></el-input>
                 </el-col>
                 <el-col :span="6">天</el-col>
               </el-row>
 
             </el-form-item>
             <el-form-item label="起购金额">
-              <el-select v-model="productInfo.least_money" clearable placeholder="请选择">
+              <el-select v-model="productInfo.least_money" clearable placeholder="请选择" :disabled="dialogType==='edit'?true:false">
                 <el-option key="100" label="100" value="100"></el-option>
                 <el-option key="1000" label="1000" value="1000"></el-option>
               </el-select>
@@ -162,7 +165,7 @@
             <el-form-item label="购买限制">
               <el-row :gutter="20">
                 <el-col :span="6">
-                  <el-input v-model="productInfo.order_limit" value="0"></el-input>
+                  <el-input v-model="productInfo.order_limit" value="0" :disabled="dialogType==='edit'?true:false"></el-input>
                 </el-col>
                 <el-col :span="6">默认0标识不限制</el-col>
               </el-row>
@@ -170,8 +173,8 @@
             <el-form-item label="是否新手标" style="margin-bottom: 30px;" required>
               <el-row :gutter="20">
                 <el-col :span="6">
-                  <el-radio v-model="productInfo.is_new" :label="1">是</el-radio>
-                  <el-radio v-model="productInfo.is_new" :label="2">否</el-radio>
+                  <el-radio v-model="productInfo.is_new" :label="1" :disabled="dialogType==='edit'?true:false">是</el-radio>
+                  <el-radio v-model="productInfo.is_new" :label="2" :disabled="dialogType==='edit'?true:false">否</el-radio>
                 </el-col>
                 <el-col :span="6">新手标用户只能购买一次</el-col>
               </el-row>
@@ -185,8 +188,8 @@
             <el-form-item label="虚拟成团" style="margin-bottom: 30px;" required>
               <el-row :gutter="20">
                 <el-col :span="6">
-                  <el-radio v-model="productInfo.is_virtual" :label="1">是</el-radio>
-                  <el-radio v-model="productInfo.is_virtual" :label="2">否</el-radio>
+                  <el-radio v-model="productInfo.is_virtual" :label="1" :disabled="dialogType==='edit'?true:false">是</el-radio>
+                  <el-radio v-model="productInfo.is_virtual" :label="2" :disabled="dialogType==='edit'?true:false">否</el-radio>
                 </el-col>
                 <el-col :span="12">开启虚拟成团后，在筹标期内人数不够的，系统会虚拟用户凑满人数，使标的成功。虚拟的用户不生成后台投资记录。</el-col>
               </el-row>
@@ -221,7 +224,7 @@
                 <el-form-item label="车辆信息" label-width="100px">
                   <el-row :gutter="20">
                     <el-col :span="5">
-                      <el-select v-model="product.car_brand_title" clearable placeholder="请选择">
+                      <el-select v-model="product.car_brand_title" clearable placeholder="请选择"  @change="loadVehicle">
                         <el-option
                           v-for="item in brandOptions"
                           :key="item.id"
@@ -231,7 +234,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="5">
-                      <el-select v-model="product.car_vehicle_title" clearable placeholder="请选择">
+                      <el-select v-model="product.car_vehicle_title" clearable placeholder="请选择" @change="loadYears">
                         <el-option
                           v-for="item in vehicleOptions"
                           :key="item.id"
@@ -241,7 +244,7 @@
                       </el-select>
                     </el-col>
                     <el-col :span="5">
-                      <el-select v-model="product.car_year_title" clearable placeholder="请选择">
+                      <el-select v-model="product.car_year_title" clearable placeholder="请选择" @change="loadModels">
                         <el-option
                           v-for="item in yearOptions"
                           :key="item.id"
@@ -297,6 +300,7 @@
     getCarYears
   } from '../../api/car'
   import { deepClone } from '../../utils'
+  import { productShow } from '../../api/product'
 
   const statusShow = {
     1: '即将开始',
@@ -322,7 +326,7 @@
     filters: {
       statusFilter(status) {
         const statusMap = {
-          '2': 'info',
+          '2': 'danger',
           '1': 'success'
         }
         return statusMap[status]
@@ -358,11 +362,13 @@
     created() {
       this.getProduct()
       this.getBrands()
-      this.getVehicles()
-      this.getYears()
-      this.getModels()
     },
     methods: {
+      handleShow(id){
+        productShow(id).then(res=>{
+          this.getProduct()
+        })
+      },
       addUser() {
         this.productCars.push(defaultProductCar)
       },
@@ -377,16 +383,21 @@
         const res = await getCarBrands({ per_page: 100000 })
         this.brandOptions = res.data.items
       },
-      async getVehicles() {
-        const res = await getCarVehicles({ per_page: 100000 })
+      async loadVehicle(value) {
+        const brand_id = this.brandOptions.find((n) => n.title == value).id
+        const res = await getCarVehicles({ per_page: 100000, brand_id: brand_id })
         this.vehicleOptions = res.data.items
       },
-      async getYears() {
-        const res = await getCarYears({ per_page: 100000 })
+
+      async loadYears(value) {
+        const vehicle_id = this.vehicleOptions.find((n) => n.title == value).id
+        const res = await getCarYears({ per_page: 100000, vehicle_id: vehicle_id })
         this.yearOptions = res.data.items
       },
-      async getModels() {
-        const res = await getCarModels({ per_page: 100000 })
+
+      async loadModels(value) {
+        const year_id = this.yearOptions.find((n) => n.title == value).id
+        const res = await getCarModels({ per_page: 100000, year_id: year_id })
         this.modelOptions = res.data.items
       },
       async getProduct() {
@@ -464,6 +475,7 @@
            await addProduct(this.productInfo)
         }
         this.getProduct()
+        this.dialogVisible=false
         this.$notify({
           title: 'Success',
           message: '操作成功！',

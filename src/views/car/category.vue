@@ -9,8 +9,12 @@
             <el-button type="text" size="mini" style="margin-left: 20px;color: red;" @click="dialogShow(data.key, data)">
               {{data.btnText}}
             </el-button>
+			 <el-button v-if="data.formKey != 'year_id' && node.level === 4" type="text" size="mini" style="margin-left: 20px;color: red;"
+                  @click="editDialogShow(node, data, 1)">
+              编辑名称
+            </el-button>
             <el-button v-if="data.formKey != 'year_id'" type="text" size="mini" style="margin-left: 20px;color: red;"
-              @click="editDialogShow(node, data)">
+                       @click="editDialogShow(node, data)">
               {{node.level === 4?'编辑参数':'编辑'}}
             </el-button>
             <el-button type="text" size="mini" style="margin-left: 20px;color: red;" @click="deleteHandle(node, data.id)">
@@ -43,6 +47,12 @@
         <el-form-item label="车系名称">
           <el-input v-model="form.title" autocomplete="off" placeholder="单行输入"></el-input>
         </el-form-item>
+        <el-form-item label="车系logo">
+          <el-upload class="avatar-uploader" :show-file-list="false" action="Fake Action" :http-request="httpRequest">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar line">
+            <i v-else class="el-icon-plus avatar-uploader-icon line"></i>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialog_Series = false">取 消</el-button>
@@ -71,6 +81,17 @@
         <el-button type="primary" @click="submitModel">提 交</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="编辑名称" :visible.sync="dialog_name" :show-close="false">
+      <el-form :model="form" label-width="80px">
+        <el-form-item label="名称">
+          <el-input v-model="form.title" autocomplete="off" placeholder="单行输入"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialog_name = false">取 消</el-button>
+        <el-button type="primary" @click="submitName">提 交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -89,8 +110,8 @@
     deleteCarYear,
     getCarModels,
     addCarModel,
-    deleteCarModel
-  } from "../../api/car"
+    deleteCarModel, updateCarModelName
+  } from '../../api/car'
   import {
     uploadFile
   } from "../../api/upload"
@@ -102,6 +123,7 @@
         dialog_Series: false, //车系弹窗的显隐
         dialog_Age: false, //年份弹窗的显隐
         dialog_Model: false, //型号弹窗的显隐
+        dialog_name: false,
         form: {
           title: ""
         }, //双向绑定的表单数据
@@ -154,18 +176,20 @@
       },
       // 点击弹出层添加
       dialogShow(key, data) {
+        this.form={}
+        this.imageUrl=''
         this.type = 1;
         this[key] = true;
         if (data) {
           if (data.formKey) {
             this.form[data.formKey] = data.id;
+            this.opId = data.tree_key;
+            this.opData = data;
           }
-          this.opId = data.tree_key;
-          this.opData = data;
         }
       },
       // 点击弹出层修改
-      editDialogShow(node, data) {
+      editDialogShow(node, data, type) {
         if (node.parent) {
           this.parent_id = node.parent.data.id;
         }
@@ -180,8 +204,12 @@
           this.dialog_Age = true;
         }
         if (node.level === 4) {
-          this.$router.push('/car/editInfo?id='+data.id);
-          return false;
+          if(type == 1){
+            this.dialog_name = true;
+          }else{
+            this.$router.push('/car/editInfo?id='+data.id);
+            return false;
+          }
         }
         if (data) {
           this.form["title"] = data.title;
@@ -275,6 +303,7 @@
             this.form = {
               title: ""
             };
+            this.imageUrl2 = "";
             this.dialog_Series = false;
             this.$message({
               type: 'success',
@@ -343,6 +372,8 @@
             this.opData.children.push({
               title: this.form.title,
               id: res.data.id,
+              btnText: "编辑型号",
+              key: "dialog_Model",
               formKey: "models_id",
               tree_key: "models_id" + res.data.id
             });
@@ -359,6 +390,24 @@
           this.$message({
             type: 'success',
             message: '编辑年款成功!'
+          });
+        });
+      },
+      // 保存名称修改
+      submitName() {
+        if (!this.form.title || this.form.title.trim().length == 0) {
+          this.$message.error('请填写名称');
+          return false;
+        }
+        updateCarModelName(this.form.models_id, this.form).then((res) => {
+          this.opData.title = this.form.title;
+          this.form = {
+            title: ""
+          };
+          this.dialog_name = false;
+          this.$message({
+            type: 'success',
+            message: '编辑名称成功!'
           });
         });
       },

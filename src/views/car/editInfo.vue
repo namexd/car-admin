@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div style="margin-bottom: 10px">
-      <el-page-header @back="goBack()" content="跟进记录">
+      <el-page-header @back="goBack()" content="编辑参数">
       </el-page-header>
     </div>
     <el-tabs v-model="activeName" type="card">

@@ -310,7 +310,7 @@
               </el-form-item>
             </el-form>
             <el-button type="default" @click="goNext('carInfo')">上一步</el-button>
-            <el-button type="primary" @click="confirmCarTest">保存</el-button>
+            <el-button type="primary" @click="confirmCarInfo">保存</el-button>
             <el-button type="default" @click="goNext('carUser')">下一步</el-button>
           </div>
         </el-tab-pane>
@@ -328,7 +328,7 @@
               </el-form-item>
             </el-form>
             <el-button type="default" @click="goNext('carTest')">上一步</el-button>
-            <el-button type="primary" @click="confirmCarUser">保存并关闭</el-button>
+            <el-button type="primary" @click="confirmCarInfo">保存</el-button>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -433,12 +433,12 @@
         this.getCar()
       },
       goNext(activeName) {
-        if (!this.carId) {
-          this.$message.error('请先保存！')
-          return false
-        }
-        this.getCarTest()
-        this.getCarUser()
+        // if (!this.carId) {
+        //   this.$message.error('请先保存！')
+        //   return false
+        // }
+        // this.getCarTest()
+        // this.getCarUser()
         this.activeName = activeName
 
       },
@@ -529,6 +529,18 @@
       },
       async confirmCarInfo() {
         const isEdit = this.dialogType === 'edit'
+        var car_test = Object.keys(this.carTest);
+        var car_user = Object.keys(this.carUser);
+        if(car_test.length==0)
+        {
+          this.$message.error('请填写检测报告')
+          return  false
+        }
+        if(car_user.length==0)
+        {
+          this.$message.error('请填写车主')
+          return  false
+        }
         const params = {
           brand_title: this.carInfo.brand_title,
           vehicle_title: this.carInfo.vehicle_title,

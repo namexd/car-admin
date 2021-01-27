@@ -132,19 +132,19 @@
             <el-row>
               <el-col :span="4">
                 <el-form-item label="" class="postInfo-container-item">
-                  <el-select v-model="listQueryParent.keytype" placeholder="请选择" clearable class="filter-item" style="width: 130px">
-                    <el-option  key="user_name"  label="姓名" value="user_name"/>
-                    <el-option  key="mobile"  label="手机号" value="mobile"/>
+                  <el-select v-model="listQueryParent.search_type" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+                    <el-option label="姓名" value="1"/>
+                    <el-option   label="手机号" value="2"/>
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item   class="postInfo-container-item">
-                  <el-input   v-model="listQueryParent.keyword" autocomplete="off"></el-input>
+                  <el-input   v-model="listQueryParent.search_keyword" autocomplete="off"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+                <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilterParent">
                   搜索
                 </el-button>
               </el-col>
@@ -152,9 +152,14 @@
           </el-form>
 
         </div>
-        <el-table ref="dragTable"  :data="parentList" row-key="id" fit highlight-current-row
+        <el-table ref="dragTable"  :data="parentList" row-key="id" fit highlight-current-row  @current-change="handleCurrentChange"
                   style="width: 100%;margin-top:30px;" border>
+          <el-table-column
+            type="index"
+            width="50">
+          </el-table-column>
           <el-table-column align="center" label="账号" width="220">
+
             <template slot-scope="scope">
               {{ scope.row.mobile }}
             </template>
@@ -203,7 +208,7 @@
   export default {
     components: { Pagination },
     directives: { waves },
-
+    inject:['reload'],
     props: {
       user: {
         type: Object,
@@ -279,6 +284,15 @@
         this.listQueryMine.page = 1
         this.getUserCoupon()
       },
+      handleFilterParent(){
+        getUsers(this.listQueryParent).then(res=>{
+          this.parentList=res.data.items
+
+        })
+      },
+      handleCurrentChange(val) {
+        this.parentParams.p_id=val.id;
+      },
       async getUserCoupon() {
         const res = await getUserCoupon(this.listQueryMine)
         this.couponList = res.data.items
@@ -298,17 +312,13 @@
       },
       addParent() {
         this.dialogParentVisible = true
-         getUsers().then(res=>{
-           this.parentList=res.data.items
-           this.parentParams.p_id=res.data.items[0].id;
-         })
       },
       postMine() {
         this.dialogMineVisible = false
         addsUerCoupon(this.couponParams).then(res => {
           if (res.code == 0) {
-            this.user.total_coupon=Number(this.user.total_coupon)+Number(this.couponParams.coupon_num)
             this.$message.success('添加红包券成功')
+            this.reload()
           } else {
             this.$message.success('添加红包券失败')
           }
@@ -319,6 +329,7 @@
         updateUserParent(this.$route.query.id, this.parentParams).then(res => {
           if (res.code == 0) {
             this.$message.success('操作成功')
+            this.reload()
           } else {
             this.$message.error('操作失败')
           }
