@@ -2,8 +2,15 @@
   <div class="custom-tree-container app-container">
     <el-button @click="dialogShow('dialog_Brand')">添加品牌</el-button>
     <div class="block" style="margin-top: 30px;">
-      <el-tree ref="tree" :data="listData" node-key="tree_key"   :expand-on-click-node="false" lazy :load="treeLoad">
+      <el-tree ref="tree" :data="listData" node-key="tree_key"   :expand-on-click-node="false" lazy :load="treeLoad"
+               @node-drop="handleDrop"
+               draggable
+               :allow-drop="allowDrop"
+               :allow-drag="allowDrag"
+
+      >
         <span class="custom-tree-node" slot-scope="{ node, data }">
+          <icon style="padding-right: 10px" class="el-icon-sort" v-if=" node.level === 2"> </icon>
           <span>{{ data.title }}</span>
           <span>
             <el-button type="text" size="mini" style="margin-left: 20px;color: red;" @click="dialogShow(data.key, data)">
@@ -110,7 +117,7 @@
     deleteCarYear,
     getCarModels,
     addCarModel,
-    deleteCarModel, updateCarModelName
+    deleteCarModel, updateCarModelName, sortCarVehicle
   } from '../../api/car'
   import {
     uploadFile
@@ -139,6 +146,29 @@
       this.getBrand();
     },
     methods: {
+      handleDrop(draggingNode, dropNode, dropType, ev) {
+        const step=Math.abs(Number(draggingNode.id)-Number(dropNode.id))
+        const params={
+          is_up:dropType=='before'?1:2,
+          step:step
+        }
+        const vehicle_id=draggingNode.data.id
+        sortCarVehicle(vehicle_id,params).then(res=>{
+          if (res.code==0){
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+          }
+        })
+      },
+      allowDrop(draggingNode, dropNode, type) {
+        return (dropNode.level==2)&&(type !== 'inner')
+      },
+      allowDrag(draggingNode) {
+        return draggingNode.level === 2;
+      },
+
       // 删除
       deleteHandle(node, id) {
         if (node.level === 1) {

@@ -239,3 +239,10 @@ export function getCarSellLogs(params) {
     params
   })
 }
+export function sortCarVehicle(id,data) {
+  return request({
+    url: `/admin/car-vehicle/${id}/updown`,
+    method: 'put',
+    data
+  })
+}
