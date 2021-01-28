@@ -5,12 +5,12 @@
         <el-row>
           <el-col :span="4">
             <el-form-item label-width="60px" label="品牌" class="postInfo-container-item">
-              <el-select v-model="listQuery.brand_title" clearable placeholder="请选择" @change="loadVehicle" ref="brand">
+              <el-select v-model="listQuery.brand_id" clearable placeholder="请选择" @change="loadVehicle" ref="brand">
                 <el-option
                   v-for="item in brandOptions"
                   :key="item.id"
                   :label="item.title"
-                  :value="item.title"
+                  :value="item.id"
                 >
                 </el-option>
               </el-select>
@@ -18,24 +18,24 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label-width="60px" label="车系" class="postInfo-container-item">
-              <el-select v-model="listQuery.vehicle_title" clearable placeholder="请选择" @change="loadYears">
+              <el-select v-model="listQuery.vehicle_id" clearable placeholder="请选择" @change="loadYears">
                 <el-option
                   v-for="item in vehicleOptions"
                   :key="item.id"
                   :label="item.title"
-                  :value="item.title">
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label-width="60px" label="款:" class="postInfo-container-item">
-              <el-select v-model="listQuery.year_title" clearable placeholder="请选择" @change="loadModels">
+              <el-select v-model="listQuery.year_id" clearable placeholder="请选择" @change="loadModels">
                 <el-option
                   v-for="item in yearOptions"
                   :key="item.id"
                   :label="item.title"
-                  :value="item.title">
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -52,7 +52,13 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
+            <el-form-item label-width="60px" label="车源号:" class="postInfo-container-item">
+                <el-input v-model="listQuery.source_no" clearable placeholder="输入车源号" style="width: 50%">
+                </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
               查询
             </el-button>
@@ -74,7 +80,7 @@
 
     <el-table ref="dragTable" v-loading="listLoading" :data="carList" row-key="id" fit highlight-current-row
     >
-      <el-table-column min-width="300px" label="权重" width="200">
+      <el-table-column  label="权重"  >
         <template slot-scope="{row}">
           <template v-if="row.edit">
             <el-input v-model="row.sort" class="edit-input" size="small"/>
@@ -110,6 +116,11 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="车源号">
+        <template slot-scope="scope">
+          {{ scope.row.source_no }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="品牌">
         <template slot-scope="scope">
           {{ scope.row.brand_title }}
@@ -148,12 +159,15 @@
       <!--          </el-tag>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column align="center" label="操作" width="300px">
+      <el-table-column align="center" label="操作" width="400px">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="handleSell(scope)" v-if="scope.row.is_sell==2">
+          <el-button type="danger" size="mini" @click="handleSell(scope)" v-if="scope.row.is_sell==1">
+            已售出
+          </el-button>
+          <el-button type="success" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==2">
             上架
           </el-button>
-          <el-button type="warning" size="mini" @click="handleSell(scope)" v-if="scope.row.is_sell==1">
+          <el-button type="warning" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==1">
             下架
           </el-button>
           <el-button type="primary" size="mini" @click="handleCopy(scope)">
@@ -162,7 +176,7 @@
           <el-button type="default" size="mini" @click="handleEdit(scope)">
             编辑
           </el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          <el-button type="info" size="mini" @click="handleDelete(scope)">删除</el-button>
 
         </template>
       </el-table-column>
@@ -176,32 +190,32 @@
         <el-tab-pane label="基础信息" name="carInfo">
           <el-form :model="carInfo" label-position="left" label-width="100px" style="width: 50%">
             <el-form-item label="品牌" required>
-              <el-select v-model="carInfo.brand_title" clearable placeholder="请选择" @change="loadVehicle">
+              <el-select v-model="carInfo.brand_id" clearable placeholder="请选择" @change="loadVehicle">
                 <el-option
                   v-for="item in brandOptions"
                   :key="item.id"
                   :label="item.title"
-                  :value="item.title">
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="车系" required>
-              <el-select v-model="carInfo.vehicle_title" clearable placeholder="请选择" @change="loadYears">
+              <el-select v-model="carInfo.vehicle_id" clearable placeholder="请选择" @change="loadYears">
                 <el-option
                   v-for="item in vehicleOptions"
                   :key="item.id"
                   :label="item.title"
-                  :value="item.title">
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="年款" required>
-              <el-select v-model="carInfo.year_title" clearable placeholder="请选择" @change="loadModels">
+              <el-select v-model="carInfo.year_id" clearable placeholder="请选择" @change="loadModels">
                 <el-option
                   v-for="item in yearOptions"
                   :key="item.id"
                   :label="item.title"
-                  :value="item.title">
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -357,7 +371,7 @@
     getCarUser,
     getCarVehicles,
     getCarYears, sortCars, updateCarCopy, updateCarSell,
-    updateCarTest, updateCarUser
+    updateCarTest, updateCarUser, updateCarWarehouse
   } from '../../api/car'
 
   const statusShow = {
@@ -452,20 +466,17 @@
       },
 
       async loadVehicle(value) {
-        const brand_id = this.brandOptions.find((n) => n.title == value).id
-        const res = await getCarVehicles({ per_page: 100000, brand_id: brand_id })
+        const res = await getCarVehicles({ per_page: 100000, brand_id: value })
         this.vehicleOptions = res.data.items
       },
 
       async loadYears(value) {
-        const vehicle_id = this.vehicleOptions.find((n) => n.title == value).id
-        const res = await getCarYears({ per_page: 100000, vehicle_id: vehicle_id })
+        const res = await getCarYears({ per_page: 100000, vehicle_id: value })
         this.yearOptions = res.data.items
       },
 
       async loadModels(value) {
-        const year_id = this.yearOptions.find((n) => n.title == value).id
-        const res = await getCarModels({ per_page: 100000, year_id: year_id })
+        const res = await getCarModels({ per_page: 100000, year_id: value })
         this.modelOptions = res.data.items
       },
 
@@ -487,6 +498,11 @@
         this.carUser ={}
         this.dialogType = 'new'
         this.dialogVisible = true
+      },
+      handleWarehouse(scope) {
+        updateCarWarehouse(scope.row.id).then(res => {
+          this.getCar()
+        })
       },
       handleSell(scope) {
         updateCarSell(scope.row.id).then(res => {
@@ -542,9 +558,9 @@
           return  false
         }
         const params = {
-          brand_title: this.carInfo.brand_title,
-          vehicle_title: this.carInfo.vehicle_title,
-          year_title: this.carInfo.year_title,
+          brand_id: this.carInfo.brand_id,
+          vehicle_id: this.carInfo.vehicle_id,
+          year_id: this.carInfo.year_id,
           model_id: this.carInfo.model_id,
           subtitle: this.carInfo.subtitle,
           banner_ids: this.carInfo.banner_ids,
