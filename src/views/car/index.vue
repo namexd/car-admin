@@ -170,9 +170,9 @@
           <el-button type="warning" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==1">
             下架
           </el-button>
-          <el-button type="primary" size="mini" @click="handleCopy(scope)">
-            复制
-          </el-button>
+<!--          <el-button type="primary" size="mini" @click="handleCopy(scope)">-->
+<!--            复制-->
+<!--          </el-button>-->
           <el-button type="default" size="mini" @click="handleEdit(scope)">
             编辑
           </el-button>
@@ -285,7 +285,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="过户次数">
-              <el-input v-model="carInfo.number_change"></el-input>
+              <el-input v-model="carInfo.number_change"  oninput="carInfo.number_change=carInfo.number_change.replace(/[^\d]/g,'')" style="width: 50%"></el-input>
             </el-form-item>
             <el-form-item label="是否推荐" style="margin-bottom: 30px;" required>
               <el-radio v-model="carInfo.is_up" :label="1">是</el-radio>
@@ -335,10 +335,10 @@
                 <el-input v-model="carUser.owner_user"></el-input>
               </el-form-item>
               <el-form-item label="身份证号">
-                <el-input v-model="carUser.owner_mobile"></el-input>
+                <el-input v-model="carUser.owner_idcard"></el-input>
               </el-form-item>
               <el-form-item label="手机号">
-                <el-input v-model="carUser.owner_idcard"></el-input>
+                <el-input v-model="carUser.owner_mobile"></el-input>
               </el-form-item>
             </el-form>
             <el-button type="default" @click="goNext('carTest')">上一步</el-button>
@@ -399,7 +399,8 @@
       return {
         carId: '',
         carInfo: {
-          banners:[]
+          banners:[],
+          number_change:Number,
         },
         carTest: {},
         carUser: {},
@@ -570,7 +571,7 @@
           registration_at: this.carInfo.registration_at,
           transmission: this.carInfo.transmission,
           emission_standard: this.carInfo.emission_standard,
-          number_change: this.carInfo.number_change,
+          number_change: Number(this.carInfo.number_change),
           is_up: this.carInfo.is_up,
           accident_test:this.carTest.accident_test,
           engine_test:this.carTest.engine_test,
