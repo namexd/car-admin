@@ -54,7 +54,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label-width="60px" label="车源号:" class="postInfo-container-item">
-                <el-input v-model="listQuery.source_no" clearable placeholder="输入车源号" style="width: 50%">
+                <el-input v-model="listQuery.source_no" clearable placeholder="输入车源号" style="width: 60%">
                 </el-input>
             </el-form-item>
           </el-col>
