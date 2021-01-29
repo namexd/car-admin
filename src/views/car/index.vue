@@ -467,16 +467,25 @@
       },
 
       async loadVehicle(value) {
+        this.carInfo.vehicle_id=''
+        this.carInfo.year_id=''
+        this.carInfo.model_id=''
+
         const res = await getCarVehicles({ per_page: 100000, brand_id: value })
         this.vehicleOptions = res.data.items
       },
 
       async loadYears(value) {
+        this.carInfo.year_id=''
+        this.carInfo.model_id=''
+
         const res = await getCarYears({ per_page: 100000, vehicle_id: value })
         this.yearOptions = res.data.items
       },
 
       async loadModels(value) {
+        this.carInfo.model_id=''
+
         const res = await getCarModels({ per_page: 100000, year_id: value })
         this.modelOptions = res.data.items
       },
@@ -591,6 +600,7 @@
           const res = await addCar(params)
           this.carId = res.data.id
         }
+        this.dialogVisible=false
         this.getCar()
         this.$notify({
           title: 'Success',
