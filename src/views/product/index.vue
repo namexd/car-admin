@@ -118,7 +118,7 @@
             <el-form-item label="标的金额">
               <el-input v-model="productInfo.collect_money" :disabled="dialogType==='edit'?true:false"></el-input>
             </el-form-item>
-            <el-form-item label="年华收益" required>
+            <el-form-item label="年化收益" required>
               <el-row :gutter="20">
                 <el-col :span="6">
                   <el-input v-model="productInfo.product_yield"></el-input>
