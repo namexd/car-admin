@@ -88,11 +88,11 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="180px">
+      <el-table-column align="center" label="操作" width="280px">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleEdit(scope)">编辑</el-button>
           <el-button type="default" size="mini" @click="handleLog(scope)">购买记录</el-button>
-          <el-button v-if="scope.row.status==6" type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          <el-button :disabled="scope.row.can_delete==1?false:true" type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
