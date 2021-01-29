@@ -161,13 +161,13 @@
       <!--      </el-table-column>-->
       <el-table-column align="center" label="操作" width="400px">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleSell(scope)" v-if="scope.row.is_sell==1">
+          <el-button type="danger" size="mini" @click="handleSell(scope)" v-if="scope.row.is_warehouse==1&&scope.row.is_sell==1">
             已售出
           </el-button>
           <el-button type="success" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==2">
             上架
           </el-button>
-          <el-button type="warning" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==1">
+          <el-button type="warning" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==1&&scope.row.is_sell==1">
             下架
           </el-button>
 <!--          <el-button type="primary" size="mini" @click="handleCopy(scope)">-->
