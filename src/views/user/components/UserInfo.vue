@@ -16,7 +16,7 @@
           <el-col :span="24"  >
             <div class="card-panel-description">
               <div class="card-panel-text">
-                红包卷
+                红包券
               </div>
               <el-button type="text" @click="showLogs" style="color: red;font-size: 15px">{{user.total_coupon}}</el-button>
               <el-button type="text" @click="addMine">添加</el-button>
