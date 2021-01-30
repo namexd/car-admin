@@ -7,6 +7,7 @@
                draggable
                :allow-drop="allowDrop"
                :allow-drag="allowDrag"
+               :accordion="true"
 
       >
         <span class="custom-tree-node" slot-scope="{ node, data }">
