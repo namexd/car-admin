@@ -459,7 +459,7 @@
       // 获取品牌
       getBrand() {
         const that = this;
-        getCarBrands().then((res) => {
+        getCarBrands({per_page: 100000}).then((res) => {
           let data = res.data.items;
           this.setData(data);
           that.listData = res.data.items;
@@ -483,7 +483,8 @@
       // 获取车系
       getCarVehicleData(data, resolve) {
         getCarVehicles({
-          brand_id: data.id
+          brand_id: data.id,
+        per_page: 100000
         }).then((res) => {
           let items = res.data.items;
           if (items && items.length > 0) {
@@ -502,7 +503,8 @@
       // 获取年款
       getCarYearsData(data, resolve) {
         getCarYears({
-          vehicle_id: data.id
+          vehicle_id: data.id,
+          per_page: 100000
         }).then((res) => {
           let items = res.data.items;
           if (items && items.length > 0) {
@@ -521,7 +523,8 @@
       // 获取型号
       getCarModelsData(data, resolve) {
         getCarModels({
-          year_id: data.id
+          year_id: data.id,
+          per_page: 100000
         }).then((res) => {
           let items = res.data.items;
           if (items && items.length > 0) {

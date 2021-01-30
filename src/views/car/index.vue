@@ -220,7 +220,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="型号" required>
-              <el-select v-model="carInfo.model_id" clearable placeholder="请选择">
+              <el-select v-model="carInfo.model_id" clearable placeholder="请选择" @change="change()">
                 <el-option
                   v-for="item in modelOptions"
                   :key="item.id"
@@ -470,22 +470,21 @@
         this.carInfo.vehicle_id=''
         this.carInfo.year_id=''
         this.carInfo.model_id=''
-
         const res = await getCarVehicles({ per_page: 100000, brand_id: value })
         this.vehicleOptions = res.data.items
       },
-
+      change(){
+        this.$forceUpdate()
+      },
       async loadYears(value) {
         this.carInfo.year_id=''
         this.carInfo.model_id=''
-
         const res = await getCarYears({ per_page: 100000, vehicle_id: value })
         this.yearOptions = res.data.items
       },
 
       async loadModels(value) {
         this.carInfo.model_id=''
-
         const res = await getCarModels({ per_page: 100000, year_id: value })
         this.modelOptions = res.data.items
       },
