@@ -3,12 +3,16 @@
     <el-card style="margin-bottom:20px;">
       <div slot="header" class="clearfix">
         <span>会员资料</span>
-<!--        <el-button v-if="user.status==2" @click="handleUserBlock(user.status)" style="float: right;" type="warning"-->
-<!--                   size="mini">移除黑名单-->
-<!--        </el-button>-->
-<!--        <el-button v-if="user.status==1" @click="handleUserBlock(user.status)" style="float: right;" type="danger"-->
-<!--                   size="mini">加入黑名单-->
-<!--        </el-button>-->
+        <el-button   @click="handleUserDelete(user)" style="float: right;margin-left: 5px" type="info"
+                     size="mini">删除
+        </el-button>
+        <el-button v-if="user.status==2" @click="handleUserBlock(user)" style="float: right;" type="warning"
+                   size="mini">移除黑名单
+        </el-button>
+        <el-button v-if="user.status==1" @click="handleUserBlock(user)" style="float: right;" type="danger"
+                   size="mini">加入黑名单
+        </el-button>
+
       </div>
 
       <div class="user-profile">
@@ -42,6 +46,22 @@
               <b>推荐人</b>
               <span>{{user.p_user}}</span>
               <el-button type="text" style="margin-left: 20px" @click="addParent">修改</el-button>
+            </div>
+            <div class="progress-item">
+              <b>姓名</b>
+              <span>{{user.auth.real_name}}</span>
+            </div>
+            <div class="progress-item">
+              <b>身份证号</b>
+              <span>{{user.auth.id_card}}</span>
+            </div>
+            <div class="progress-item">
+              <b>银行名称</b>
+              <span>{{user.auth.bank_name.bank_name}}</span>
+            </div>
+            <div class="progress-item">
+              <b>银行卡号</b>
+              <span>{{user.bank_card_no}}</span>
             </div>
           </div>
         </div>
@@ -183,7 +203,14 @@
 <script>
   import Pagination from '@/components/Pagination'
   import waves from '@/directive/waves'
-  import { addsUerCoupon, deleteUserCoupon, getUserCoupon, getUsers, updateUserParent } from '../../../api/user'
+  import {
+    addsUerCoupon, blackUser,
+    deleteUser,
+    deleteUserCoupon,
+    getUserCoupon,
+    getUsers,
+    updateUserParent
+  } from '../../../api/user'
   import { getCoupons } from '../../../api/coupon' // waves directive
 
 
@@ -270,15 +297,74 @@
       this.getCoupon()
     },
     methods: {
+
+
+      handleUserBlock(user)
+      {
+        const message=user.status==1?'确定要把'+user.mobile+'加入黑名单吗?<br><span style="color: red">拉黑后，该账号无法访问平台！</span>':'确定要把'+user.mobile+'解除黑名单吗?'
+        this.$confirm(message, 'Warning', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning',
+          dangerouslyUseHTMLString:true
+        })
+          .then(() => {
+            blackUser(user.id).then(res=>{
+              if (res.code==0)
+              {
+                this.$message.success('操作成功')
+                this.reload()
+              }
+            })
+          })
+          .catch(err => {
+            console.error(err)
+          })
+
+      },
+
+      handleUserDelete(user)
+      {
+        this.$confirm('确定要把'+user.mobile+'删除吗?<br><span style="color: red">删除后，该账号数据无法恢复，请谨慎操作！</span>', 'Warning', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning',
+          dangerouslyUseHTMLString:true
+        })
+          .then(() => {
+            deleteUser(user.id).then(res=>{
+              if (res.code==0)
+              {
+                this.$message.success('删除成功')
+                this.$router.back()
+              }
+            })
+          })
+          .catch(err => {
+            console.error(err)
+          })
+
+      },
+
       handleDelete(scope)
       {
-        deleteUserCoupon({ids:scope}).then(res=>{
-          if (res.code==0)
-          {
-            this.$message.success('删除成功')
-            this.getUserCoupon()
-          }
+        this.$confirm('确定要删除吗?', 'Warning', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
         })
+          .then(() => {
+            deleteUserCoupon({ids:scope}).then(res=>{
+              if (res.code==0)
+              {
+                this.$message.success('删除成功')
+                this.getUserCoupon()
+              }
+            })
+          })
+          .catch(err => {
+            console.error(err)
+          })
       },
       handleFilter() {
         this.listQueryMine.page = 1

@@ -74,15 +74,6 @@
 
         <el-form-item label="券有效期" required>
           <el-row>
-            <el-col :span="2">
-              从发券第
-            </el-col>
-            <el-col :span="4">
-              <el-input :disabled="dialogType=='edit'?true:false" v-model="coupon.valid_start_day" placeholder="请输入"></el-input>
-            </el-col>
-            <el-col :span="2" style="text-align: center">
-              天,至
-            </el-col>
             <el-col :span="4">
               <el-input :disabled="dialogType=='edit'?true:false" v-model="coupon.valid_end_day" placeholder="请输入"></el-input>
             </el-col>

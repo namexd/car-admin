@@ -245,7 +245,7 @@
                 <el-col :span="6">万元</el-col>
               </el-row>
             </el-form-item>
-            <el-form-item label="新车价">
+            <el-form-item label="新车价" required>
 
               <el-row :gutter="20">
                 <el-col :span="6">
@@ -256,7 +256,7 @@
 
             </el-form-item>
             <h5>车辆信息</h5>
-            <el-form-item label="里表显示">
+            <el-form-item label="里表显示" required>
               <el-row :gutter="20">
                 <el-col :span="6">
                   <el-input v-model="carInfo.mileage"></el-input>
@@ -265,26 +265,27 @@
               </el-row>
 
             </el-form-item>
-            <el-form-item label="上牌时间">
+            <el-form-item label="上牌时间" required>
               <el-date-picker type="date"
                               placeholder="选择日期"
                               value-format="yyyy-MM-dd"
                               v-model="carInfo.registration_at">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="变速箱">
+            <el-form-item label="变速箱" required>
               <el-select v-model="carInfo.transmission" clearable placeholder="请选择">
                 <el-option key="1" label="自动" value="1"></el-option>
                 <el-option key="2" label="手动" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="排放标准">
+            <el-form-item label="排放标准" required>
               <el-select v-model="carInfo.emission_standard" clearable placeholder="请选择">
+                <el-option key="1" label="国四" value="3"></el-option>
                 <el-option key="1" label="国五" value="1"></el-option>
                 <el-option key="2" label="国六" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="过户次数">
+            <el-form-item label="过户次数" required>
               <el-input v-model="carInfo.number_change"  oninput="carInfo.number_change=carInfo.number_change.replace(/[^\d]/g,'')" style="width: 50%"></el-input>
             </el-form-item>
             <el-form-item label="是否推荐" style="margin-bottom: 30px;" required>
@@ -319,7 +320,7 @@
               <el-form-item label="配置检测" style="margin-top: 30px;" required>
                 <el-checkbox v-model="carTest.config_test" :true-label="1" :false-label="2">已检测</el-checkbox>
               </el-form-item>
-              <el-form-item label="检测总结">
+              <el-form-item label="检测总结" required>
                 <el-input type="textarea" v-model="carTest.conclusion"></el-input>
               </el-form-item>
             </el-form>
@@ -331,13 +332,13 @@
         <el-tab-pane label="车主信息" name="carUser">
           <div style="text-align:right;">
             <el-form :model="carUser" label-position="left" label-width="100px" style="width: 50%">
-              <el-form-item label="车主姓名">
+              <el-form-item label="车主姓名" >
                 <el-input v-model="carUser.owner_user"></el-input>
               </el-form-item>
-              <el-form-item label="身份证号">
+              <el-form-item label="身份证号" >
                 <el-input v-model="carUser.owner_idcard"></el-input>
               </el-form-item>
-              <el-form-item label="手机号">
+              <el-form-item label="手机号" >
                 <el-input v-model="carUser.owner_mobile"></el-input>
               </el-form-item>
             </el-form>
@@ -555,15 +556,9 @@
       async confirmCarInfo() {
         const isEdit = this.dialogType === 'edit'
         var car_test = Object.keys(this.carTest);
-        var car_user = Object.keys(this.carUser);
         if(car_test.length==0)
         {
           this.$message.error('请填写检测报告')
-          return  false
-        }
-        if(car_user.length==0)
-        {
-          this.$message.error('请填写车主')
           return  false
         }
         const params = {

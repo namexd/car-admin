@@ -50,6 +50,18 @@ export function addsUerCoupon(data) {
     data
   })
 }
+export function deleteUser(id) {
+  return request({
+    url: `/admin/user/${id}`,
+    method: 'delete',
+  })
+}
+export function blackUser(id) {
+  return request({
+    url: `/admin/user/${id}/black`,
+    method: 'put',
+  })
+}
 export function deleteUserCoupon(data) {
   return request({
     url: `/admin/user-coupon`,

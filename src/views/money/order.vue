@@ -81,7 +81,7 @@
       </el-table-column>
       <el-table-column align="center" label="参与项目">
         <template slot-scope="scope">
-          {{ scope.row.create_at}}
+          {{ scope.row.product_title}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="项目开始时间">

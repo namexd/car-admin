@@ -43,6 +43,7 @@
           <el-form-item :label="item.name" v-for="(item, index) in tabData4" :key="index">
             <el-select v-model="item.value" placeholder="请选择" style="width: 100%">
               <el-option label="标配" value="标配"></el-option>
+              <el-option label="选配" value="选配"></el-option>
               <el-option label="-" value="-"></el-option>
             </el-select>
           </el-form-item>
@@ -56,6 +57,7 @@
           <el-form-item :label="item.name" v-for="(item, index) in tabData5" :key="index">
             <el-select v-model="item.value" placeholder="请选择" style="width: 100%">
               <el-option label="标配" value="标配"></el-option>
+              <el-option label="选配" value="选配"></el-option>
               <el-option label="-" value="-"></el-option>
             </el-select>
           </el-form-item>
@@ -68,8 +70,11 @@
         <el-form ref="form" label-width="200px" style="max-width: 500px;margin-top: 40px;">
           <el-form-item :label="item.name" v-for="(item, index) in tabData6" :key="index">
             <el-select v-model="item.value" placeholder="请选择" style="width: 100%">
-              <el-option label="标配" value="标配"></el-option>
-              <el-option label="-" value="-"></el-option>
+              <el-option v-if="item.key!=='t6_key4'" label="标配" value="标配"></el-option>
+              <el-option v-if="item.key!=='t6_key4'" label="选配" value="选配"></el-option>
+              <el-option v-if="item.key!=='t6_key4'" label="-" value="-"></el-option>
+              <el-option v-if="item.key=='t6_key4'" label="自动" value="自动"></el-option>
+              <el-option v-if="item.key=='t6_key4'" label="手动" value="手动"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -139,11 +144,16 @@
         tabData2: [{
           name: "排量（L）",
           value: "",
-          key: "t2_key1"
+          key: "t2_key1",
         }, {
           name: "进气形式",
           value: "",
-          key: "t2_key2"
+          key: "t2_key2",
+          options: [{
+            name: "自然吸气"
+          }, {
+            name: "涡轮增压"
+          }]
         }, {
           name: "气缸数",
           value: "",
@@ -164,6 +174,10 @@
             name: "汽油"
           }, {
             name: "柴油"
+          }, {
+            name: "油电混动"
+          }, {
+            name: "纯电动"
           }]
         }, {
           name: "燃油标号",
