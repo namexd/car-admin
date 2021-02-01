@@ -93,6 +93,9 @@
         const params={
           service_tel:this.data.service_tel,
           plat_intro:this.data.plat_intro,
+          min_recharge:this.data.min_recharge,
+          min_withdraw:this.data.min_withdraw,
+          withdraw_fee:this.data.withdraw_fee,
         }
         updateSysConfig(params).then(res=>{
           if (res.code==0)
