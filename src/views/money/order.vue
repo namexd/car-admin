@@ -86,12 +86,12 @@
       </el-table-column>
       <el-table-column align="center" label="项目开始时间">
         <template slot-scope="scope">
-          {{ scope.row.create_at}}
+          {{ scope.row.start_at}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="还本时间">
         <template slot-scope="scope">
-          {{ scope.row.create_at}}
+          {{ scope.row.end_at}}
         </template>
       </el-table-column>
     </el-table>

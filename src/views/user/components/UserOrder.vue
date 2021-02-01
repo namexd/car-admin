@@ -30,7 +30,7 @@
             <div class="card-panel-text">
               累计收益
             </div>
-            <span>{{user.with_price}}</span>
+            <span>{{user.total_income_price}}</span>
           </div>
         </el-col>
         <el-col :span="6">
@@ -38,7 +38,7 @@
             <div class="card-panel-text">
               等待收益
             </div>
-            <span>{{user.total_income_price}}</span>
+            <span>{{user.frozen_income_price}}</span>
           </div>
         </el-col>
       </el-row>

@@ -49,19 +49,19 @@
             </div>
             <div class="progress-item">
               <b>姓名</b>
-              <span>{{user.auth.real_name}}</span>
+              <span>{{user.auth?user.auth.real_name:''}}</span>
             </div>
             <div class="progress-item">
               <b>身份证号</b>
-              <span>{{user.auth.id_card}}</span>
+              <span>{{user.auth?user.auth.id_card:''}}</span>
             </div>
             <div class="progress-item">
               <b>银行名称</b>
-              <span>{{user.auth.bank_name.bank_name}}</span>
+              <span>{{user.auth?user.auth.bank_name:''}}</span>
             </div>
             <div class="progress-item">
               <b>银行卡号</b>
-              <span>{{user.bank_card_no}}</span>
+              <span>{{user.auth?user.auth.bank_card_no:''}}</span>
             </div>
           </div>
         </div>
