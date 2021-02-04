@@ -246,3 +246,10 @@ export function sortCarVehicle(id,data) {
     data
   })
 }
+export function deleteCarSell(data) {
+  return request({
+    url: `/admin/car-sell`,
+    method: 'delete',
+    data
+  })
+}

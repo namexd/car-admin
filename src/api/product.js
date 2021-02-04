@@ -33,10 +33,9 @@ export function showProduct(id) {
     method: 'get',
   })
 }
-export function deleteProduct(data) {
+export function deleteProduct(id) {
   return request({
-    url: `/admin/product`,
+    url: `/admin/product/${id}`,
     method: 'delete',
-    data
   })
 }

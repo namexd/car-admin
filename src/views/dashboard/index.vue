@@ -102,7 +102,7 @@
       <el-col :span="6">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span>已付收益</span>
+            <span>累计收益</span>
             <el-button type="warning" size="mini" style="float: right; padding: 3px 0">共</el-button>
           </div>
           <h1>

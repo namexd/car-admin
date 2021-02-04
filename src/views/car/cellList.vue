@@ -98,6 +98,8 @@
           <el-button type="primary" size="mini" @click="handleEdit(scope)">
             跟进记录
           </el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -119,7 +121,7 @@
     deleteCar,
     showCar,
   } from '@/api/car'
-  import { getCarSell } from '../../api/car'
+  import { deleteCarSell, getCarSell } from '../../api/car'
 
   const statusShow = {
     1: '已跟进',
@@ -209,6 +211,24 @@
       },
       handleEdit(scope) {
         this.$router.push({name:'CellLog',query:{id:scope.row.id}})
+      },
+      handleDelete({ $index, row }) {
+        this.$confirm('确定要删除吗?', 'Warning', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(async() => {
+            await deleteCarSell({ ids: row.id })
+            this.carList.splice($index, 1)
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          })
+          .catch(err => {
+            console.error(err)
+          })
       },
     }
   }

@@ -54,7 +54,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label-width="60px" label="车源号:" class="postInfo-container-item">
-                <el-input v-model="listQuery.source_no" clearable placeholder="输入车源号" style="width: 50%">
+                <el-input v-model="listQuery.source_no" clearable placeholder="输入车源号" style="width: 60%">
                 </el-input>
             </el-form-item>
           </el-col>
@@ -161,18 +161,18 @@
       <!--      </el-table-column>-->
       <el-table-column align="center" label="操作" width="400px">
         <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleSell(scope)" v-if="scope.row.is_sell==1">
+          <el-button type="danger" size="mini" @click="handleSell(scope)" v-if="scope.row.is_warehouse==1&&scope.row.is_sell==1">
             已售出
           </el-button>
           <el-button type="success" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==2">
             上架
           </el-button>
-          <el-button type="warning" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==1">
+          <el-button type="warning" size="mini" @click="handleWarehouse(scope)" v-if="scope.row.is_warehouse==1&&scope.row.is_sell==1">
             下架
           </el-button>
-          <el-button type="primary" size="mini" @click="handleCopy(scope)">
-            复制
-          </el-button>
+<!--          <el-button type="primary" size="mini" @click="handleCopy(scope)">-->
+<!--            复制-->
+<!--          </el-button>-->
           <el-button type="default" size="mini" @click="handleEdit(scope)">
             编辑
           </el-button>
@@ -220,7 +220,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="型号" required>
-              <el-select v-model="carInfo.model_id" clearable placeholder="请选择">
+              <el-select v-model="carInfo.model_id" clearable placeholder="请选择" @change="change()">
                 <el-option
                   v-for="item in modelOptions"
                   :key="item.id"
@@ -245,7 +245,7 @@
                 <el-col :span="6">万元</el-col>
               </el-row>
             </el-form-item>
-            <el-form-item label="新车价">
+            <el-form-item label="新车价" required>
 
               <el-row :gutter="20">
                 <el-col :span="6">
@@ -256,7 +256,7 @@
 
             </el-form-item>
             <h5>车辆信息</h5>
-            <el-form-item label="里表显示">
+            <el-form-item label="里表显示" required>
               <el-row :gutter="20">
                 <el-col :span="6">
                   <el-input v-model="carInfo.mileage"></el-input>
@@ -265,27 +265,28 @@
               </el-row>
 
             </el-form-item>
-            <el-form-item label="上牌时间">
+            <el-form-item label="上牌时间" required>
               <el-date-picker type="date"
                               placeholder="选择日期"
                               value-format="yyyy-MM-dd"
                               v-model="carInfo.registration_at">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="变速箱">
+            <el-form-item label="变速箱" required>
               <el-select v-model="carInfo.transmission" clearable placeholder="请选择">
                 <el-option key="1" label="自动" value="1"></el-option>
                 <el-option key="2" label="手动" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="排放标准">
+            <el-form-item label="排放标准" required>
               <el-select v-model="carInfo.emission_standard" clearable placeholder="请选择">
+                <el-option key="1" label="国四" value="3"></el-option>
                 <el-option key="1" label="国五" value="1"></el-option>
                 <el-option key="2" label="国六" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="过户次数">
-              <el-input v-model="carInfo.number_change"></el-input>
+            <el-form-item label="过户次数" required>
+              <el-input v-model="carInfo.number_change"  oninput="carInfo.number_change=carInfo.number_change.replace(/[^\d]/g,'')" style="width: 50%"></el-input>
             </el-form-item>
             <el-form-item label="是否推荐" style="margin-bottom: 30px;" required>
               <el-radio v-model="carInfo.is_up" :label="1">是</el-radio>
@@ -319,7 +320,7 @@
               <el-form-item label="配置检测" style="margin-top: 30px;" required>
                 <el-checkbox v-model="carTest.config_test" :true-label="1" :false-label="2">已检测</el-checkbox>
               </el-form-item>
-              <el-form-item label="检测总结">
+              <el-form-item label="检测总结" required>
                 <el-input type="textarea" v-model="carTest.conclusion"></el-input>
               </el-form-item>
             </el-form>
@@ -331,14 +332,14 @@
         <el-tab-pane label="车主信息" name="carUser">
           <div style="text-align:right;">
             <el-form :model="carUser" label-position="left" label-width="100px" style="width: 50%">
-              <el-form-item label="车主姓名">
+              <el-form-item label="车主姓名" >
                 <el-input v-model="carUser.owner_user"></el-input>
               </el-form-item>
-              <el-form-item label="身份证号">
-                <el-input v-model="carUser.owner_mobile"></el-input>
-              </el-form-item>
-              <el-form-item label="手机号">
+              <el-form-item label="身份证号" >
                 <el-input v-model="carUser.owner_idcard"></el-input>
+              </el-form-item>
+              <el-form-item label="手机号" >
+                <el-input v-model="carUser.owner_mobile"></el-input>
               </el-form-item>
             </el-form>
             <el-button type="default" @click="goNext('carTest')">上一步</el-button>
@@ -399,7 +400,8 @@
       return {
         carId: '',
         carInfo: {
-          banners:[]
+          banners:[],
+          number_change:Number,
         },
         carTest: {},
         carUser: {},
@@ -466,16 +468,24 @@
       },
 
       async loadVehicle(value) {
+        this.carInfo.vehicle_id=''
+        this.carInfo.year_id=''
+        this.carInfo.model_id=''
         const res = await getCarVehicles({ per_page: 100000, brand_id: value })
         this.vehicleOptions = res.data.items
       },
-
+      change(){
+        this.$forceUpdate()
+      },
       async loadYears(value) {
+        this.carInfo.year_id=''
+        this.carInfo.model_id=''
         const res = await getCarYears({ per_page: 100000, vehicle_id: value })
         this.yearOptions = res.data.items
       },
 
       async loadModels(value) {
+        this.carInfo.model_id=''
         const res = await getCarModels({ per_page: 100000, year_id: value })
         this.modelOptions = res.data.items
       },
@@ -546,15 +556,9 @@
       async confirmCarInfo() {
         const isEdit = this.dialogType === 'edit'
         var car_test = Object.keys(this.carTest);
-        var car_user = Object.keys(this.carUser);
         if(car_test.length==0)
         {
           this.$message.error('请填写检测报告')
-          return  false
-        }
-        if(car_user.length==0)
-        {
-          this.$message.error('请填写车主')
           return  false
         }
         const params = {
@@ -570,7 +574,7 @@
           registration_at: this.carInfo.registration_at,
           transmission: this.carInfo.transmission,
           emission_standard: this.carInfo.emission_standard,
-          number_change: this.carInfo.number_change,
+          number_change: Number(this.carInfo.number_change),
           is_up: this.carInfo.is_up,
           accident_test:this.carTest.accident_test,
           engine_test:this.carTest.engine_test,
@@ -590,6 +594,7 @@
           const res = await addCar(params)
           this.carId = res.data.id
         }
+        this.dialogVisible=false
         this.getCar()
         this.$notify({
           title: 'Success',

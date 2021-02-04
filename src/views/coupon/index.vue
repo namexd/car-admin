@@ -46,19 +46,20 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.per_page"
                 @pagination="getCoupon"/>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑红包券':'新增红包券'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'查看红包券':'新增红包券'">
       <el-form :model="coupon" label-position="left" label-width="100px">
         <el-form-item label="券面额" required>
-          <el-input v-model="coupon.deduct_money" placeholder="券面额"/>
+          <el-input :disabled="dialogType=='edit'?true:false" v-model="coupon.deduct_money" placeholder="券面额"/>
         </el-form-item>
         <el-form-item label="券名称" required>
-          <el-input v-model="coupon.title" placeholder="红包券名称"/>
+          <el-input :disabled="dialogType=='edit'?true:false" v-model="coupon.title" placeholder="红包券名称"/>
         </el-form-item>
         <el-form-item label="消费门槛" required>
-          <el-input v-model="coupon.min_money" placeholder="消费门槛"/>
+          <el-input :disabled="dialogType=='edit'?true:false" v-model="coupon.min_money" placeholder="消费门槛"/>
         </el-form-item>
         <el-form-item label="发放时间" required>
           <el-date-picker
+             :disabled="dialogType=='edit'?true:false"
             v-model="daterange"
             type="daterange"
             value-format="yyyy-MM-dd"
@@ -73,17 +74,8 @@
 
         <el-form-item label="券有效期" required>
           <el-row>
-            <el-col :span="2">
-              从发券第
-            </el-col>
             <el-col :span="4">
-              <el-input v-model="coupon.valid_start_day" placeholder="请输入"></el-input>
-            </el-col>
-            <el-col :span="2" style="text-align: center">
-              天,至
-            </el-col>
-            <el-col :span="4">
-              <el-input v-model="coupon.valid_end_day" placeholder="请输入"></el-input>
+              <el-input :disabled="dialogType=='edit'?true:false" v-model="coupon.valid_end_day" placeholder="请输入"></el-input>
             </el-col>
             <el-col :span="4">
               天
@@ -92,14 +84,10 @@
         </el-form-item>
 
         <el-form-item label="消费门槛" required>
-          <el-radio v-model="coupon.type" :label="1">实名赠送</el-radio>
-          <el-radio v-model="coupon.type" :label="2">下级实名赠送</el-radio>
+          <el-radio :disabled="dialogType=='edit'?true:false" v-model="coupon.type" :label="1">实名赠送</el-radio>
+          <el-radio :disabled="dialogType=='edit'?true:false" v-model="coupon.type" :label="2">下级实名赠送</el-radio>
         </el-form-item>
       </el-form>
-      <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="confirmCoupon">保存</el-button>
-      </div>
     </el-dialog>
 
     <el-dialog

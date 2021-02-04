@@ -88,11 +88,11 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="180px">
+      <el-table-column align="center" label="操作" width="280px">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleEdit(scope)">编辑</el-button>
           <el-button type="default" size="mini" @click="handleLog(scope)">购买记录</el-button>
-          <el-button v-if="scope.row.status==6" type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
+          <el-button :disabled="scope.row.can_delete==1?false:true" type="danger" size="mini" @click="handleDelete(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -105,7 +105,7 @@
 
         <el-tabs v-model="activeName">
           <el-tab-pane label="基础资料" name="productInfo">
-            <el-form-item label="项目名称">
+            <el-form-item label="项目名称" required>
               <el-input v-model="productInfo.product_title"></el-input>
             </el-form-item>
             <el-form-item label="副标题">
@@ -115,10 +115,10 @@
               <Upload v-if="dialogVisible" v-model="productInfo.banner_ids" :pic_url="productInfo.banner"/>
               <p>建议图片宽度750，高度200-950</p>
             </el-form-item>
-            <el-form-item label="标的金额">
+            <el-form-item label="标的金额" required>
               <el-input v-model="productInfo.collect_money" :disabled="dialogType==='edit'?true:false"></el-input>
             </el-form-item>
-            <el-form-item label="年华收益" required>
+            <el-form-item label="年化收益" required>
               <el-row :gutter="20">
                 <el-col :span="6">
                   <el-input v-model="productInfo.product_yield"></el-input>
@@ -127,7 +127,7 @@
               </el-row>
             </el-form-item>
 
-            <el-form-item label="筹标时间">
+            <el-form-item label="筹标时间" required>
               <el-date-picker type="date"
                               placeholder="选择日期"
                               value-format="yyyy-MM-dd"
@@ -136,7 +136,7 @@
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="筹标期限">
+            <el-form-item label="筹标期限" required>
 
               <el-row :gutter="20">
                 <el-col :span="6">
@@ -146,7 +146,7 @@
               </el-row>
 
             </el-form-item>
-            <el-form-item label="标的天数">
+            <el-form-item label="标的天数" required>
               <el-row :gutter="20">
                 <el-col :span="6">
                   <el-input v-model="productInfo.product_days" :disabled="dialogType==='edit'?true:false"></el-input>
@@ -155,7 +155,7 @@
               </el-row>
 
             </el-form-item>
-            <el-form-item label="起购金额">
+            <el-form-item label="起购金额" required>
               <el-select v-model="productInfo.least_money" clearable placeholder="请选择" :disabled="dialogType==='edit'?true:false">
                 <el-option key="100" label="100" value="100"></el-option>
                 <el-option key="1000" label="1000" value="1000"></el-option>
@@ -215,13 +215,13 @@
           <el-tab-pane label="车主信息" name="productUser">
             <div style="text-align:right;">
               <el-card v-for="product in productCars" style="margin-bottom: 5px">
-                <el-form-item label="车主姓名">
+                <el-form-item label="车主姓名" >
                   <el-input v-model="product.user_name"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号">
+                <el-form-item label="手机号" >
                   <el-input v-model="product.mobile"></el-input>
                 </el-form-item>
-                <el-form-item label="车辆信息" label-width="100px">
+                <el-form-item label="车辆信息" label-width="100px" >
                   <el-row :gutter="20">
                     <el-col :span="5">
                       <el-select v-model="product.car_brand_title" clearable placeholder="请选择"  @change="loadVehicle">
@@ -439,7 +439,7 @@
           type: 'warning'
         })
           .then(async() => {
-            await deleteProduct({ ids: row.id })
+            await deleteProduct(row.id)
             this.productList.splice($index, 1)
             this.$message({
               type: 'success',

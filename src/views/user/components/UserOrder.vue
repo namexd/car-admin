@@ -9,20 +9,36 @@
 
     <div class="user-profile">
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="6">
           <div class="card-panel-description">
             <div class="card-panel-text">
               累计投资金额
             </div>
-            <span>{{user.total_order_mone}}</span>
+            <span>{{user.total_order_money}}</span>
           </div>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <div class="card-panel-description">
             <div class="card-panel-text">
               累计投资项目
             </div>
-            <span>{{user.total_order_numy}}</span>
+            <span>{{user.total_order_num}}</span>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              累计收益
+            </div>
+            <span>{{user.total_income_price}}</span>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              等待收益
+            </div>
+            <span>{{user.frozen_income_price}}</span>
           </div>
         </el-col>
       </el-row>
