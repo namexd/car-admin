@@ -82,8 +82,8 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button  @click="agree(scope.row)">已转账</el-button>
-          <el-button  @click="agree(scope.row)">拒绝</el-button>
+          <el-button  type="success" @click="agree(scope.row,1)">已转账</el-button>
+          <el-button type="danger" @click="agree(scope.row,2)">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -171,8 +171,8 @@
       this.getMoneyWithdraw()
     },
     methods: {
-      async agree(row) {
-        const res = await changeMoneyWithdraw(row.id)
+      async agree(row,status) {
+        const res = await changeMoneyWithdraw(row.id,{status:status})
         if(res.code==0)
         {
           this.$message.success('操作成功!')
