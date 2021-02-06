@@ -31,7 +31,7 @@
               <div class="card-panel-text">
                 账户余额
               </div>
-              <el-button type="text" @click="showLogs" style="color: red;font-size: 15px">{{order.usable_price}}</el-button>
+              <el-button type="text" style="color: red;font-size: 15px">{{order.usable_price}}</el-button>
 
             </div>
           </el-col>
