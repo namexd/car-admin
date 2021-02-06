@@ -6,8 +6,8 @@
           <el-col :span="3">
             <el-form-item label="" class="postInfo-container-item" style="text-align: right" prop="search_type">
               <el-select v-model="listQuery.search_type" placeholder="请选择" clearable class="filter-item">
-                <el-option key="user_name" label="姓名" value="user_name"/>
-                <el-option key="mobile" label="手机号" value="mobile"/>
+                <el-option key="user_name" label="姓名" value="1"/>
+                <el-option key="mobile" label="手机号" value="2"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -69,9 +69,24 @@
           {{ scope.row.user_mobile}}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="变动金额 (元)">
+      <el-table-column align="center" label="参与时间">
+        <template slot-scope="scope">
+          {{ scope.row.create_at}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="参与金额 (元)">
         <template slot-scope="scope">
           {{ scope.row.money}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="优惠券">
+        <template slot-scope="scope">
+          {{ scope.row.coupon_money}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="实付款">
+        <template slot-scope="scope">
+          {{ scope.row.real_money}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="待收收益(元)">
@@ -87,6 +102,11 @@
       <el-table-column align="center" label="项目开始时间">
         <template slot-scope="scope">
           {{ scope.row.start_at}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="项目天数">
+        <template slot-scope="scope">
+          {{ scope.row.product_days}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="还本时间">

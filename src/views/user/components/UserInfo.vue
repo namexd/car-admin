@@ -17,13 +17,22 @@
 
       <div class="user-profile">
         <el-row :gutter="20">
-          <el-col :span="24"  >
+          <el-col :span="12"  >
             <div class="card-panel-description">
               <div class="card-panel-text">
                 红包券
               </div>
               <el-button type="text" @click="showLogs" style="color: red;font-size: 15px">{{user.total_coupon}}</el-button>
               <el-button type="text" @click="addMine">添加</el-button>
+            </div>
+          </el-col>
+          <el-col :span="12"  >
+            <div class="card-panel-description">
+              <div class="card-panel-text">
+                账户余额
+              </div>
+              <el-button type="text" @click="showLogs" style="color: red;font-size: 15px">{{order.usable_price}}</el-button>
+
             </div>
           </el-col>
         </el-row>
@@ -62,6 +71,10 @@
             <div class="progress-item">
               <b>银行卡号</b>
               <span>{{user.auth?user.auth.bank_card_no:''}}</span>
+            </div>
+            <div class="progress-item">
+              <b>支行信息</b>
+              <span>{{user.auth?user.auth.bank_branch:''}}</span>
             </div>
           </div>
         </div>
@@ -252,7 +265,14 @@
             invite_user: ''
           }
         }
+      },
+      order: {
+        type: Object,
+        default: () => {
+          return {}
+        }
       }
+
     },
     filters:{
       stateTypeFilter(type){

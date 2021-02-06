@@ -70,6 +70,11 @@
           {{ scope.row.bank_name}}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="支行信息">
+        <template slot-scope="scope">
+          {{ scope.row.bank_branch}}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="银行卡号">
         <template slot-scope="scope">
           {{ scope.row.bank_card_no}}
@@ -80,10 +85,15 @@
           {{ scope.row.money}}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="状态">
+        <template slot-scope="scope">
+          {{ statusShow[scope.row.status]}}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button  type="success" @click="agree(scope.row,1)">已转账</el-button>
-          <el-button type="danger" @click="agree(scope.row,2)">拒绝</el-button>
+          <el-button v-if="scope.row.status=='0'" type="success" @click="agree(scope.row,1)">已转账</el-button>
+          <el-button v-if="scope.row.status=='0'" type="danger" @click="agree(scope.row,2)">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>

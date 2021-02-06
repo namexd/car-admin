@@ -9,7 +9,7 @@
       <el-row :gutter="20">
 
         <el-col :span="12" :xs="24">
-          <user-info :user="user.info" style="min-height: 400px"/>
+          <user-info :user="user.info" :order="user.order" style="min-height: 400px"/>
         </el-col>
 
         <el-col :span="12" :xs="24">

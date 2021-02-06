@@ -6,8 +6,8 @@
           <el-col :span="3">
             <el-form-item label="" class="postInfo-container-item" style="text-align: right" prop="search_type">
               <el-select v-model="listQuery.search_type" placeholder="请选择" clearable class="filter-item">
-                <el-option key="user_name" label="姓名" value="user_name"/>
-                <el-option key="mobile" label="手机号" value="mobile"/>
+                <el-option key="user_name" label="姓名" value="1"/>
+                <el-option key="mobile" label="手机号" value="2"/>
               </el-select>
             </el-form-item>
           </el-col>

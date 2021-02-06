@@ -51,6 +51,16 @@
           {{ scope.row.create_at}}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="支行信息">
+        <template slot-scope="scope">
+          {{ scope.row.bank_branch}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="状态">
+        <template slot-scope="scope">
+          {{ statusShow[scope.row.status]}}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <div v-if="scope.row.status==1">
