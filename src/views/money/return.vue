@@ -72,7 +72,7 @@
       </el-table-column>
       <el-table-column align="center" label="变动金额 (元)">
         <template slot-scope="scope">
-          {{ scope.row.money}}
+          {{ scope.row.end_money}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="待收收益(元)">
@@ -82,17 +82,17 @@
       </el-table-column>
       <el-table-column align="center" label="参与项目">
         <template slot-scope="scope">
-          {{ scope.row.create_at}}
+          {{ scope.row.product_title}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="项目开始时间">
         <template slot-scope="scope">
-          {{ scope.row.create_at}}
+          {{ scope.row.start_at}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="还本时间">
         <template slot-scope="scope">
-          {{ scope.row.create_at}}
+          {{ scope.row.end_at}}
         </template>
       </el-table-column>
 <!--      <el-table-column align="center" label="操作">-->
