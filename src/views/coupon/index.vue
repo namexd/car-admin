@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column align="center" label="使用率">
         <template slot-scope="scope">
-          {{scope.row.used_num>0? ((scope.row.used_num)/(scope.row.total_num)*100+'%'):0 }}
+          {{scope.row.usage}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
